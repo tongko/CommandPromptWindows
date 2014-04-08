@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Unmanaged">
+      <UniqueIdentifier>{eadca671-2d12-4959-abef-c348915d3ce3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Unmanaged">
+      <UniqueIdentifier>{1534f5b5-6949-46fd-8a6d-1717b6ae5fd3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
@@ -22,12 +28,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Unmanaged</Filter>
     </ClInclude>
-    <ClInclude Include="LinkList.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Msg.h">
+      <Filter>Header Files\Unmanaged</Filter>
     </ClInclude>
-    <ClInclude Include="MsgQueue.h">
+    <ClInclude Include="Queue.h">
+      <Filter>Header Files\Unmanaged</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedList.h">
+      <Filter>Header Files\Unmanaged</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgPipeline.h">
+      <Filter>Header Files\Unmanaged</Filter>
+    </ClInclude>
+    <ClInclude Include="Workplace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,10 +53,7 @@
     <ClCompile Include="Stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LinkList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MsgQueue.cpp">
+    <ClCompile Include="Workplace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

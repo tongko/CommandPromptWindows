@@ -3,7 +3,7 @@
 // but are changed infrequently
 
 #pragma once
-#pragma comment(lib, "Kernel32.dll")
+#pragma comment(lib, "Kernel32.lib")
 
 #include	<Windows.h>
 

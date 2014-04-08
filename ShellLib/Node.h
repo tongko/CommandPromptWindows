@@ -17,7 +17,7 @@ namespace Unmanaged {
 		node->value = value;
 
 		return value;
-	}
+	};
 
 	template <typename T> void InsertBefore(CNode<T> * node, const T & value) {
 		if (node == NULL) return;
@@ -31,7 +31,7 @@ namespace Unmanaged {
 
 		node->previous = newNode;
 		newNode->next = node;
-	}
+	};
 
 	template <typename T> void InsertAfter(CNode<T> * node, const T & value) {
 		if (node == NULL) return;
@@ -45,6 +45,23 @@ namespace Unmanaged {
 
 		node->next = newNode;
 		newNode->previous = node;
+	};
+
+	template <typename T> T & Remove(CNode<T> * node) {
+		if (node == NULL) return NULL;
+
+		T & value = node->value;
+		CNode<T> * after = node->next;
+		if (after == NULL) {
+			after = node->previous;
+			if (after == NULL) return NULL;
+			RemoveAfter(after);
+		}
+		else {
+			RemoveBefore(after);
+		}
+
+		return value;
 	}
 
 	template <typename T> T & RemoveBefore(CNode<T> * node) {
@@ -60,7 +77,7 @@ namespace Unmanaged {
 
 		delete temp;
 		return value;
-	}
+	};
 
 	template <typename T> T & RemoveAfter(CNode<T> * node) {
 		if (node == NULL || node->next == NULL) return NULL;
@@ -75,5 +92,5 @@ namespace Unmanaged {
 
 		delete temp;
 		return value;
-	}
+	};
 }
