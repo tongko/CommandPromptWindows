@@ -83,6 +83,7 @@
     <ClInclude Include="Queue.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Stdafx.h" />
+    <ClInclude Include="SysEventMonitor.h" />
     <ClInclude Include="Workplace.h" />
   </ItemGroup>
   <ItemGroup>
