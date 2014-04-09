@@ -6,12 +6,12 @@
 
 namespace Unmanaged {
 
-	CQueue<MSG*> *	g_msgQ;
+	CQueue<LPMESSAGE> *	g_msgQ;
 
 	void InitializeMessageQueue() {
 		if (g_msgQ != NULL) return;
 
-		g_msgQ = new CQueue<MSG*>();
+		g_msgQ = new CQueue<LPMESSAGE>();
 	};
 
 	void FinalizeMessageQueue() {
@@ -21,14 +21,20 @@ namespace Unmanaged {
 	}
 
 	BOOL WINAPI GetMessage(
-		_Out_		LPMSG lpMsg,
+		_Out_		LPMESSAGE lpMsg,
 		_In_opt_	INT hWindow,
 		_In_		UINT wMsgFilterMin,
 		_In_		UINT wMsgFilterMax) {
-
-		LPMSG msg = g_msgQ->Peek();
+		BOOL bResult = FALSE;
+		LPMESSAGE msg = g_msgQ->Peek();
 		if (msg != NULL) {
-			if (hWindow == msg->hWindow && msg->message >= wMsgFilterMin && msg->message <= wMsgFilterMax)
+			if (hWindow == msg->hWindow) {
+				if ((wMsgFilterMin == wMsgFilterMax == 0)
+					|| (msg->message >= wMsgFilterMin && msg->message <= wMsgFilterMax)) {
+					lpMsg = g_msgQ->Pop;
+					bResult = TRUE;
+				}
+			}
 		}
 	};
 

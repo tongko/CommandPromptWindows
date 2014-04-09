@@ -12,4 +12,4 @@ typedef struct _tagMSG {
 	LPARAM      lParam;
 	DWORD       time;
 	POINT       pt;
-} MSG, FAR *LPMSG;
+} MESSAGE, FAR *LPMESSAGE;
