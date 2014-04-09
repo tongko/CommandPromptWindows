@@ -18,7 +18,7 @@ namespace Unmanaged {
 
 		~CQueue() {
 			if (m_mutex != NULL)
-				ReleaseMutex(m_mutex);
+				CloseHandle(m_mutex);
 		}
 
 	protected:
@@ -39,6 +39,7 @@ namespace Unmanaged {
 			}
 
 			m_count++;
+			ReleaseMutex(m_mutex);
 		}
 
 		virtual T &		PopValue(void) {
@@ -50,6 +51,8 @@ namespace Unmanaged {
 			
 			T & value = Remove(headNode);
 			m_count--;
+
+			ReleaseMutex(m_mutex);
 			return value;
 		}
 
