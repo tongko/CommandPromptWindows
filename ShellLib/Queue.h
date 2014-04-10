@@ -25,7 +25,7 @@ namespace Unmanaged {
 		HANDLE		m_mutex;
 
 	protected:
-		virtual void	PushValue(const T & value) {
+		virtual void	PushValue(const T * value) {
 
 			WaitForSingleObject(m_mutex, INFINITE);
 
@@ -42,21 +42,21 @@ namespace Unmanaged {
 			ReleaseMutex(m_mutex);
 		}
 
-		virtual T &		PopValue(void) {
+		virtual T		PopValue(void) {
 			WaitForSingleObject(m_mutex, INFINITE);
 
 			CNode<T> * headNode = GetHeadNode();
 
 			if (headNode == NULL) return NULL;
 			
-			T & value = Remove(headNode);
+			T value = Remove(headNode);
 			m_count--;
 
 			ReleaseMutex(m_mutex);
 			return value;
 		}
 
-		virtual T &		PeekValue(void) {
+		virtual T		PeekValue(void) {
 			CNode<T> * headNode = GetHeadNode();
 			if (headNode == NULL) return NULL;
 

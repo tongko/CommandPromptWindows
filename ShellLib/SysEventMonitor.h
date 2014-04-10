@@ -5,7 +5,7 @@
 
 namespace Unmanaged {
 
-	CQueue<LPMESSAGE> *	g_sysQ;
+	CQueue<MESSAGE> *	g_sysQ;
 	
 	DWORD WINAPI	Monitor(LPVOID lpParam);
 
@@ -14,7 +14,7 @@ namespace Unmanaged {
 	public:
 		CSysEventMonitor(HANDLE console) {
 			if (g_sysQ == NULL)
-				g_sysQ = new CQueue<LPMESSAGE>();
+				g_sysQ = new CQueue<MESSAGE>();
 
 			m_console = console;
 		}

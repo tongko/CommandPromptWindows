@@ -9,17 +9,17 @@ namespace Unmanaged {
 	struct CNode {
 		CNode<T> *	next;
 		CNode<T> *	previous;
-		T &			value;
+		T *			value;
 	};
 
-	template <typename T> CNode<T> * CreateNode(const T & value) {
-		CNode<T> * node = new CNode<T>();
+	template <typename T> CNode<T> * CreateNode(const T * value) {
+		CNode<T> * node = new CNode<T>;
 		node->value = value;
 
-		return value;
+		return node;
 	};
 
-	template <typename T> void InsertBefore(CNode<T> * node, const T & value) {
+	template <typename T> void InsertBefore(CNode<T> * node, const T * value) {
 		if (node == NULL) return;
 
 		CNode<T> * newNode = CreateNode(value);
@@ -33,7 +33,7 @@ namespace Unmanaged {
 		newNode->next = node;
 	};
 
-	template <typename T> void InsertAfter(CNode<T> * node, const T & value) {
+	template <typename T> void InsertAfter(CNode<T> * node, const T * value) {
 		if (node == NULL) return;
 
 		CNode<T> * newNode = CreateNode(value);
@@ -47,10 +47,10 @@ namespace Unmanaged {
 		newNode->previous = node;
 	};
 
-	template <typename T> T & Remove(CNode<T> * node) {
+	template <typename T> T * Remove(CNode<T> * node) {
 		if (node == NULL) return NULL;
 
-		T & value = node->value;
+		T * value = node->value;
 		CNode<T> * after = node->next;
 		if (after == NULL) {
 			after = node->previous;
@@ -64,11 +64,11 @@ namespace Unmanaged {
 		return value;
 	}
 
-	template <typename T> T & RemoveBefore(CNode<T> * node) {
+	template <typename T> T * RemoveBefore(CNode<T> * node) {
 		if (node == NULL || node->previous == NULL) return NULL;
 
 		CNode<T> * temp = node->previous;
-		T & value = temp->value;
+		T * value = temp->value;
 		if (temp->previous != NULL) {
 			CNode<T> * prevTemp = temp->previous;
 			prevTemp->previous = node;
@@ -79,11 +79,11 @@ namespace Unmanaged {
 		return value;
 	};
 
-	template <typename T> T & RemoveAfter(CNode<T> * node) {
+	template <typename T> T * RemoveAfter(CNode<T> * node) {
 		if (node == NULL || node->next == NULL) return NULL;
 
 		CNode<T> * temp = node->next;
-		T & value = temp->value;
+		T * value = temp->value;
 		if (temp->next != NULL) {
 			CNode<T> * nextTemp = temp->next;
 			nextTemp->previous = node;

@@ -16,9 +16,9 @@ namespace Unmanaged {
 		}
 
 	public:
-		void	Push(const T & value) { PushValue(value); }
-		T &		Pop(void) {	return PopValue(); }
-		T &		Peek(void) { return PeekValue(); }
+		void	Push(const T * value) { PushValue(value); }
+		T		Pop(void) {	return PopValue(); }
+		T		Peek(void) { return PeekValue(); }
 		void	Clear(void) {
 			if (m_head == NULL) return;
 
@@ -35,8 +35,8 @@ namespace Unmanaged {
 
 	protected:
 		virtual void	PushValue(const T & value) = 0;
-		virtual T &		PopValue(void) = 0;
-		virtual T &		PeekValue(void) = 0;
+		virtual T		PopValue(void) = 0;
+		virtual T		PeekValue(void) = 0;
 
 		void			SetHeadNode(const T & value) {
 			Clear();

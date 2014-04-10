@@ -39,9 +39,6 @@
     <ClInclude Include="LinkedList.h">
       <Filter>Header Files\Unmanaged</Filter>
     </ClInclude>
-    <ClInclude Include="MsgPipeline.h">
-      <Filter>Header Files\Unmanaged</Filter>
-    </ClInclude>
     <ClInclude Include="Workplace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
