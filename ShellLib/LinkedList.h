@@ -10,7 +10,7 @@ namespace Unmanaged {
 	{
 	protected:
 		CLinkedList(void) { m_head = NULL; }
-		CLinkedList(const T & head) { m_head = CreateNode(value); m_count++; }
+		CLinkedList(const T * head) { m_head = CreateNode(value); m_count++; }
 		~CLinkedList(void) {
 			Clear();
 		}
@@ -34,11 +34,11 @@ namespace Unmanaged {
 		}
 
 	protected:
-		virtual void	PushValue(const T & value) = 0;
+		virtual void	PushValue(const T * value) = 0;
 		virtual T		PopValue(void) = 0;
 		virtual T		PeekValue(void) = 0;
 
-		void			SetHeadNode(const T & value) {
+		void			SetHeadNode(const T * value) {
 			Clear();
 			m_head = CreateNode(value);
 		}

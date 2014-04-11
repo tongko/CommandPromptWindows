@@ -43,7 +43,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SysEventMonitor.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Unmanaged</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Header Files\Unmanaged</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMessage.h">
+      <Filter>Header Files\Unmanaged</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +61,9 @@
     </ClCompile>
     <ClCompile Include="Workplace.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SysEventMonitor.cpp">
+      <Filter>Source Files\Unmanaged</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
