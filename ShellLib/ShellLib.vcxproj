@@ -77,11 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
+    <ClInclude Include="Comparable.h" />
     <ClInclude Include="EventMessage.h" />
     <ClInclude Include="LinkedList.h" />
-    <ClInclude Include="Msg.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Queue.h" />
+    <ClInclude Include="RedBlackNode.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Stdafx.h" />
     <ClInclude Include="SysEventMonitor.h" />

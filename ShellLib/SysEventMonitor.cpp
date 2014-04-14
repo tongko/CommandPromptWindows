@@ -1,5 +1,4 @@
 #include	"Stdafx.h"
-#include	"Msg.h"
 #include	"Queue.h"
 #include	"SysEventMonitor.h"
 
@@ -53,9 +52,7 @@ namespace Unmanaged {
 	}
 
 	void CSysEventMonitor::KeyEventProc(const KEY_EVENT_RECORD & ker) {
-		LPMESSAGE msg = new MESSAGE();
-		msg->hWindow = 0;
-		msg->message = 
+
 	}
 
 	void CSysEventMonitor::MouseEventProc(const MOUSE_EVENT_RECORD & mer) {

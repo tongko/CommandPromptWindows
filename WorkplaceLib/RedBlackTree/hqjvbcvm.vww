@@ -1,0 +1,62 @@
+﻿using System;
+
+namespace WorkplaceLib.RedBlackTree
+{
+	internal struct Node<T> : IComparable<Node<T>> where T : IComparable
+	{
+		#region Properties
+
+		public T[] Nodes;
+
+		public bool IsRed;
+
+		public T Data;
+
+		#endregion
+
+
+		#region Methods
+
+		public int CompareTo(T other)
+		{
+			return ((IComparable)Data).CompareTo(other);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return ((IComparable)Data).CompareTo(obj) == 0;
+		}
+
+		public override int GetHashCode()
+		{
+			return 1;
+		}
+
+		#endregion
+
+
+		#region Operators override
+
+		public static bool operator >(Node<T> lhs, Node<T> rhs)
+		{
+			return (lhs.CompareTo(rhs) == 1)
+		}
+
+		public static bool operator <(Node<T> lhs, Node<T> rhs)
+		{
+
+		}
+
+		#endregion
+
+
+		#region IComparable<T> members
+
+		int IComparable<Node<T>>.CompareTo(T other)
+		{
+			return CompareTo(other);
+		}
+
+		#endregion
+	}
+}

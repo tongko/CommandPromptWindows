@@ -14,7 +14,7 @@ namespace Unmanaged {
 
 	template <typename T> CNode<T> * CreateNode(const T * value) {
 		CNode<T> * node = new CNode<T>;
-		node->value = value;
+		node->value = (T *) value;
 
 		return node;
 	};

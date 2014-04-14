@@ -4,11 +4,6 @@ namespace Unmanaged {
 
 #define		MAX_INPUT_REC_READ	120
 
-	DWORD WINAPI	Monitor(LPVOID lpParam) {
-		CSysEventMonitor * monitor = (CSysEventMonitor *)lpParam;
-		monitor->MonitorProc();
-	};
-
 	private class CSysEventMonitor
 	{
 	public:
@@ -30,5 +25,12 @@ namespace Unmanaged {
 		DWORD				m_threadId;
 		BOOL				m_stop;
 		CQueue<MESSAGE> *	m_sysQ;
+	};
+
+	DWORD WINAPI	Monitor(LPVOID lpParam) {
+		CSysEventMonitor * monitor = (CSysEventMonitor *)lpParam;
+		monitor->MonitorProc();
+
+		return 0;
 	};
 }
