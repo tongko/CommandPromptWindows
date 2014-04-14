@@ -2,29 +2,38 @@
 
 namespace WorkplaceLib.RedBlackTree
 {
-	public class Node<T> : IComparable<Node<T>> where T : IComparable
+	public interface IRedBlackNode
+	{
+		bool IsRed { get; set; }
+	}
+
+	public class Node<TKey, TValue> : IRedBlackNode, IComparable<Node<TKey, TValue>> where TKey : IComparable
 	{
 		#region Properties
 
-		public Node<T>[] Nodes;
+		public Node<TKey, TValue>[] Nodes { get; set; }
 
-		public bool IsRed;
+		public bool IsRed { get; set; }
 
-		public T Data;
+		public TKey Key { get; set; }
+
+		public TValue Data { get; set; }
 
 		#endregion
 
 
 		#region Methods
 
-		public int CompareTo(Node<T> other)
+		public int CompareTo(Node<TKey, TValue> other)
 		{
-			return ((IComparable)Data).CompareTo(other.Data);
+			return ((IComparable)Key).CompareTo(other.Key);
 		}
 
 		public override bool Equals(object obj)
 		{
-			return ((IComparable)Data).CompareTo(obj) == 0;
+			var node = obj as Node<TKey, TValue>;
+			if (node == null) return false;
+			return ((IComparable)Key).CompareTo(node.Key) == 0;
 		}
 
 		public override int GetHashCode()
@@ -37,35 +46,35 @@ namespace WorkplaceLib.RedBlackTree
 
 		#region Operators override
 
-		public static bool operator ==(Node<T> lhs, Node<T> rhs)
+		public static bool operator ==(Node<TKey, TValue> lhs, Node<TKey, TValue> rhs)
 		{
-			if (lhs == null) return rhs == null;
-			if (rhs == null) return false;
+			if (Equals(lhs, null)) return Equals(rhs, null);
+			if (Equals(rhs, null)) return false;
 
-			return lhs.IsRed == rhs.IsRed && ((IComparable)lhs.Data).CompareTo(rhs.Data) == 0;
+			return lhs.IsRed == rhs.IsRed && ((IComparable)lhs.Key).CompareTo(rhs.Key) == 0;
 		}
 
-		public static bool operator !=(Node<T> lhs, Node<T> rhs)
+		public static bool operator !=(Node<TKey, TValue> lhs, Node<TKey, TValue> rhs)
 		{
 			return !(lhs == rhs);
 		}
 
-		public static bool operator >(Node<T> lhs, Node<T> rhs)
+		public static bool operator >(Node<TKey, TValue> lhs, Node<TKey, TValue> rhs)
 		{
 			return (lhs.CompareTo(rhs) == 1);
 		}
 
-		public static bool operator <(Node<T> lhs, Node<T> rhs)
+		public static bool operator <(Node<TKey, TValue> lhs, Node<TKey, TValue> rhs)
 		{
 			return (lhs.CompareTo(rhs) == -1);
 		}
 
-		public static bool operator >=(Node<T> lhs, Node<T> rhs)
+		public static bool operator >=(Node<TKey, TValue> lhs, Node<TKey, TValue> rhs)
 		{
 			return (lhs.CompareTo(rhs) >= 0);
 		}
 
-		public static bool operator <=(Node<T> lhs, Node<T> rhs)
+		public static bool operator <=(Node<TKey, TValue> lhs, Node<TKey, TValue> rhs)
 		{
 			return (lhs.CompareTo(rhs) <= 0);
 		}
@@ -75,7 +84,7 @@ namespace WorkplaceLib.RedBlackTree
 
 		#region IComparable<T> members
 
-		int IComparable<Node<T>>.CompareTo(Node<T> other)
+		int IComparable<Node<TKey, TValue>>.CompareTo(Node<TKey, TValue> other)
 		{
 			return CompareTo(other);
 		}

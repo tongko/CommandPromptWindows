@@ -3,27 +3,27 @@
 namespace WorkplaceLib.RedBlackTree
 {
 	// http://www.eternallyconfuzzled.com/tuts/datastructures/jsw_tut_rbtree.aspx
-	public class Tree<T> where T : IComparable
+	public class Tree<TKey, TValue> where TKey : IComparable
 	{
 		#region Properties
 
-		public Node<T> Root { get; set; }
+		public Node<TKey, TValue> Root { get; set; }
 
 		#endregion
 
 		#region Public Methods
 
-		public void Insert(T data)
+		public void Insert(TKey key, TValue data)
 		{
-			Root = Insert(Root, data);
+			Root = Insert(Root, key, data);
 			Root.IsRed = false;
 		}
 
-		public void Remove(T data)
+		public void Remove(TKey key, TValue data)
 		{
 			var done = false;
 
-			Root = Remove(Root, data, ref done);
+			Root = Remove(Root, key, data, ref done);
 			if (Root != null)
 				Root.IsRed = false;
 		}
@@ -37,7 +37,7 @@ namespace WorkplaceLib.RedBlackTree
 		/// </summary>
 		/// <param name="root"></param>
 		/// <returns>Returns 0 if tree is an invalid red black tree. Otherwise return the black height of tree.</returns>
-		public static int SelfAssert(Node<T> root)
+		public static int SelfAssert(Node<TKey, TValue> root)
 		{
 			if (root == null)
 				return 1;
@@ -82,16 +82,42 @@ namespace WorkplaceLib.RedBlackTree
 			return 0;
 		}
 
+		public bool GetValue(TKey key, out TValue value)
+		{
+			value = default(TValue);
+
+			if (Root == null) return false;
+
+			var tempNode = Root;
+
+			while (true)
+			{
+				var dir = key.CompareTo(tempNode.Key);
+				if (dir == 0)
+				{
+					value = tempNode.Data;
+					return true;
+				}
+
+				dir = dir == 1 ? 1 : 0;
+				tempNode = tempNode.Nodes[dir];
+				if (tempNode == null)
+					break;
+			}
+
+			return false;
+		}
+
 		#endregion
 
 		#region Private Methods
 
-		private static bool IsRed(Node<T> root)
+		private static bool IsRed(IRedBlackNode root)
 		{
 			return root != null && root.IsRed;
 		}
 
-		private static Node<T> SingleRotation(Node<T> root, int dir)
+		private static Node<TKey, TValue> SingleRotation(Node<TKey, TValue> root, int dir)
 		{
 			var notDir = 1 - dir;
 			var save = root.Nodes[notDir];
@@ -105,31 +131,31 @@ namespace WorkplaceLib.RedBlackTree
 			return save;
 		}
 
-		private static Node<T> DoubleRotation(Node<T> root, int dir)
+		private static Node<TKey, TValue> DoubleRotation(Node<TKey, TValue> root, int dir)
 		{
 			var notDir = 1 - dir;
 			root.Nodes[notDir] = SingleRotation(root.Nodes[notDir], notDir);
 			return SingleRotation(root, dir);
 		}
 
-		private static Node<T> MakeNode(T data)
+		private static Node<TKey, TValue> MakeNode(TKey key, TValue data)
 		{
-			var rn = new Node<T> { Data = data, IsRed = true, Nodes = new Node<T>[] { null, null } };
+			var rn = new Node<TKey, TValue> { Key = key, Data = data, IsRed = true, Nodes = new Node<TKey, TValue>[] { null, null } };
 
 			return rn;
 		}
 
-		private static Node<T> Insert(Node<T> root, T data)
+		private static Node<TKey, TValue> Insert(Node<TKey, TValue> root, TKey key, TValue data)
 		{
 			if (root == null)
-				root = MakeNode(data);
+				root = MakeNode(key, data);
 			else
 			{
-				var cmp = data.CompareTo(root.Data);
+				var cmp = key.CompareTo(root.Key);
 				if (cmp == 0) return root;
 
 				if (cmp < 1) cmp = 0;
-				root.Nodes[cmp] = Insert(root.Nodes[cmp], data);
+				root.Nodes[cmp] = Insert(root.Nodes[cmp], key, data);
 
 				var notCmp = 1 - cmp;
 				if (IsRed(root.Nodes[cmp]))
@@ -155,13 +181,13 @@ namespace WorkplaceLib.RedBlackTree
 			return root;
 		}
 
-		private static Node<T> Remove(Node<T> root, T data, ref bool done)
+		private static Node<TKey, TValue> Remove(Node<TKey, TValue> root, TKey key, TValue data, ref bool done)
 		{
 			if (root == null)
 				done = true;
 			else
 			{
-				if (root.Data.CompareTo(data) == 0)
+				if (root.Key.CompareTo(key) == 0)
 				{
 					if (root.Nodes[0] == null || root.Nodes[1] == null)
 					{
@@ -176,22 +202,20 @@ namespace WorkplaceLib.RedBlackTree
 							done = true;
 						}
 
-						root = null;
 						return save;
 					}
-					else
-					{
-						var heir = root.Nodes[0];
 
-						while (heir.Nodes[1] != null)
-							heir = heir.Nodes[1];
+					var heir = root.Nodes[0];
 
-						root.Data = data = heir.Data;
-					}
+					while (heir.Nodes[1] != null)
+						heir = heir.Nodes[1];
+
+					root.Key = key = heir.Key;
+					root.Data = data = heir.Data;
 				}
 
-				var dir = data.CompareTo(root.Data);
-				root.Nodes[dir] = Remove(root.Nodes[dir], data, ref done);
+				var dir = key.CompareTo(root.Key);
+				root.Nodes[dir] = Remove(root.Nodes[dir], key, data, ref done);
 
 				if (!done)
 					root = RemoveBalance(root, dir, ref done);
@@ -200,7 +224,7 @@ namespace WorkplaceLib.RedBlackTree
 			return root;
 		}
 
-		private static Node<T> RemoveBalance(Node<T> root, int dir, ref bool done)
+		private static Node<TKey, TValue> RemoveBalance(Node<TKey, TValue> root, int dir, ref bool done)
 		{
 			var notDir = 1 - dir;
 			var p = root;
