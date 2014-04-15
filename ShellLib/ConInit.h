@@ -2,12 +2,13 @@
 
 namespace ShellLib {
 
-	ref class CWorkplace
+	private ref class CConInit
 	{
 	public:
-		CWorkplace();
-		~CWorkplace();
+		CConInit();
 
+	public:
+		
 	};
 
 }

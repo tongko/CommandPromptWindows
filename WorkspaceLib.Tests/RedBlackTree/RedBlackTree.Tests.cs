@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using WorkplaceLib.RedBlackTree;
 
 namespace WorkspaceLib.Tests.RedBlackTree
@@ -15,14 +16,34 @@ namespace WorkspaceLib.Tests.RedBlackTree
 			var tree = new Tree<int, long>();
 			GenerateRandom(tree);
 
-			for (var i = 0; i < 10000; i++)
+			for (var i = 0; i < 100000; i++)
 			{
 				var value = _expected[i];
 
 				long result;
-				Assert.IsTrue(!tree.GetValue(i, out result));
+				Assert.IsTrue(tree.GetValue(i, out result));
 				Assert.AreEqual(value, result);
 			}
+
+			var rand = new Random();
+			var index = rand.Next(0, 99999);
+
+			var sw = new Stopwatch();
+			long r = 0;
+			sw.Start();
+
+			r = _expected[index];
+
+			sw.Stop();
+			var e = sw.ElapsedTicks;
+
+			sw.Start();
+
+			tree.GetValue(index, out r);
+
+			sw.Stop();
+
+			Assert.Greater(e, sw.ElapsedTicks);
 		}
 
 		private void GenerateRandom(Tree<int, long> tree)
@@ -30,7 +51,7 @@ namespace WorkspaceLib.Tests.RedBlackTree
 			var rand = new Random();
 			_expected = new Dictionary<int, long>();
 
-			for (var i = 0; i < 10000; i++)
+			for (var i = 0; i < 100000; i++)
 			{
 				long value;
 

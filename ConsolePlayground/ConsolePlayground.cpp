@@ -16,11 +16,45 @@ void WriteChar(CHAR_INFO info[], int x, int y, TCHAR *chs, int len) {
 		ci->Attributes = FOREGROUND_RED | FOREGROUND_INTENSITY;
 		xpos++;
 	}
+}
 
+void ReadKey(HANDLE hInput)
+{
+	INPUT_RECORD ir[10];
+	DWORD read;
+	bool result = false;
+
+	while (true)
+	{
+		ReadConsoleInput(hInput, ir, 10, &read);
+		for (DWORD i = 0; i < read; i++)
+		{
+			if (ir[i].EventType == KEY_EVENT)
+			{
+				if (ir[i].Event.KeyEvent.wVirtualKeyCode == VK_RETURN) {
+				result = true;
+				break;
+				}
+			}
+		}
+
+		if (result) break;
+	}
+}
+
+void SwapArray(COLORREF array1[], COLORREF array2[])
+{
+	COLORREF * temp;
+	temp = array1;
+	array1 = array2;
+	array2 = temp;
 }
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	printf("Press enter after attached to debugger: ");
+	ReadKey(GetStdHandle(STD_INPUT_HANDLE));
+
 	HANDLE hNewScreenBuffer = CreateConsoleScreenBuffer(
 		GENERIC_READ | GENERIC_WRITE,
 		FILE_SHARE_READ | FILE_SHARE_WRITE,
@@ -33,27 +67,73 @@ int _tmain(int argc, _TCHAR* argv[])
 		return 1;
 	}
 
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	GetConsoleScreenBufferInfo(hNewScreenBuffer, &csbi);
-	COORD size = csbi.dwSize;
-	int length = size.X * size.Y;
-	PCHAR_INFO ci = new CHAR_INFO[length];
-	for (int i = 0; i < length; i++)
-	{
-		ci[i].Attributes = FOREGROUND_RED | FOREGROUND_INTENSITY;
-		ci[i].Char.UnicodeChar = TEXT(' ');
-	}
-
-	WriteConsoleOutput(hNewScreenBuffer, ci, csbi.dwSize, csbi.dwCursorPosition, &csbi.srWindow);
-
 	if (!SetConsoleActiveScreenBuffer(hNewScreenBuffer)) {
 		printf("Set console screen buffer failed - (%d)\n", GetLastError());
 		Sleep(10000);
 		return 1;
 	}
 
+	PCONSOLE_SCREEN_BUFFER_INFOEX pcsbi = new CONSOLE_SCREEN_BUFFER_INFOEX();
+	pcsbi->cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+	if (!GetConsoleScreenBufferInfoEx(hNewScreenBuffer, pcsbi)) {
+		printf("Get console screen buffer info ex failed - (%d)\n", GetLastError());
+		Sleep(10000);
+		return 1;
+	}
+	COORD size = pcsbi->dwSize;
+	int length = size.X * size.Y;
+
+	//
+	//	Set color table;
+	//
+	COLORREF * colorTable = new COLORREF[16];
+	for (int i = 0; i < 16; i++)
+	{
+		colorTable[i] = pcsbi->ColorTable[i];
+	}
+
+
+	COLORREF newColorTable[16] = {
+		0,									//	BLACK
+		RGB(0, 0, 128),						//	DACK BLUE
+		RGB(0, 128, 0),						//	DACK GREEN
+		RGB(0, 128, 128),					//	DACK CYAN
+		RGB(128, 0, 0),						//	DARK RED
+		RGB(128, 0, 128),					//	DARK MARGENTA
+		RGB(128, 128, 0),					//	DARK YELLOW
+		RGB(192, 192, 192),					//	LIGHT GRAY
+		RGB(128, 128, 128),					//	DARK GRAY
+		RGB(0, 0, 255),						//	BLUE
+		RGB(0, 255, 0),						//	GREEN
+		RGB(0, 255, 255),					//	CYAN
+		RGB(255, 0, 0),						//	RED
+		RGB(255, 0, 255),					//	MARGENTA
+		RGB(255, 255, 0),					//	YELLOW
+		RGB(255, 255, 255)					//	WHITE
+	};
+
+	for (int i = 0; i < 16; i++)
+	{
+		pcsbi->ColorTable[i] = newColorTable[i];
+	}
+
+	SetConsoleScreenBufferInfoEx(hNewScreenBuffer, pcsbi);
+
+	DWORD written;
+	FillConsoleOutputCharacter(
+		hNewScreenBuffer,
+		TEXT(' '),
+		length, pcsbi->dwCursorPosition, &written);
+	//FillConsoleOutputAttribute(
+	//	hNewScreenBuffer,
+	//	BACKGROUND_GREEN,
+	//	length, csbi.dwCursorPosition, &written);
+	FillConsoleOutputAttribute(
+		hNewScreenBuffer,
+		FOREGROUND_RED | FOREGROUND_INTENSITY,
+		length, pcsbi->dwCursorPosition, &written);
+
 	HANDLE _stdin = GetStdHandle(STD_INPUT_HANDLE);
-	//HANDLE _stdout = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	SMALL_RECT srctReadRect = { 1, 1, 30, 4 };
 	SMALL_RECT srctWriteRect = { 0, 0, 29, 3 };
@@ -85,6 +165,11 @@ int _tmain(int argc, _TCHAR* argv[])
 		Sleep(10000);
 		return 1;
 	}
+
+	//	Allow mouse input.
+	DWORD flag;
+	GetConsoleMode(_stdin, &flag);
+	SetConsoleMode(_stdin, flag | ENABLE_MOUSE_INPUT);
 
 	BOOL stop = FALSE;
 	INPUT_RECORD ir[120];
@@ -127,6 +212,26 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	CloseHandle(hNewScreenBuffer);
+
+	for (int i = 0; i < 16; i++)
+	{
+		pcsbi->ColorTable[i] = colorTable[i];
+	}
+
+	delete[] colorTable;
+	_stdin = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (!SetConsoleScreenBufferInfoEx(_stdin, pcsbi))
+	{
+		printf("Restore console buffer info failed - (%d)\n", GetLastError());
+		return 1;
+	}
+	if (!FillConsoleOutputAttribute(_stdin, pcsbi->wAttributes, length, pcsbi->dwCursorPosition, &written)) {
+		printf("Restore console failed - (%d)\n", GetLastError());
+		return 1;
+	}
+	delete pcsbi;
+
+	SetConsoleMode(_stdin, flag);
 
 	return 0;
 }

@@ -25,6 +25,18 @@
     <Filter Include="Header Files\Unmanaged\btree">
       <UniqueIdentifier>{9fac06ce-365b-487e-92de-d10d28516d1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Configs">
+      <UniqueIdentifier>{277e56a8-55bd-4d78-bed9-1355736cd22f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Configs">
+      <UniqueIdentifier>{d4cc4c99-d5db-4290-b5b0-2d481dbb2854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Drawing">
+      <UniqueIdentifier>{46481860-6b1e-4654-a6f8-23b1f2491eb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Drawing">
+      <UniqueIdentifier>{78d1d0b2-c21d-4479-b6ed-5ec473fbc1a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
@@ -42,9 +54,6 @@
     <ClInclude Include="LinkedList.h">
       <Filter>Header Files\Unmanaged</Filter>
     </ClInclude>
-    <ClInclude Include="Workplace.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SysEventMonitor.h">
       <Filter>Header Files\Unmanaged</Filter>
     </ClInclude>
@@ -60,6 +69,18 @@
     <ClInclude Include="RedBlackNode.h">
       <Filter>Header Files\Unmanaged\btree</Filter>
     </ClInclude>
+    <ClInclude Include="WorkspaceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkspaceConfigSection.h">
+      <Filter>Header Files\Configs</Filter>
+    </ClInclude>
+    <ClInclude Include="ConInit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\Drawing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -68,11 +89,20 @@
     <ClCompile Include="Stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Workplace.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SysEventMonitor.cpp">
       <Filter>Source Files\Unmanaged</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkspaceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkspaceConfigSection.cpp">
+      <Filter>Source Files\Configs</Filter>
+    </ClCompile>
+    <ClCompile Include="ConInit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\Drawing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
