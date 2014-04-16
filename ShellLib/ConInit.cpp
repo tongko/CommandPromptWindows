@@ -21,6 +21,8 @@ namespace ShellLib {
 		ASSERT(SetConsoleScreenBufferSize(StdOut, crdSize));
 
 		ResetScreenBufferInfo();
+
+
 	}
 
 	//
