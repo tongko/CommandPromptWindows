@@ -1,12 +1,11 @@
 #pragma once
 #include "Stdafx.h"
 
-namespace Unmanaged {
+namespace ShellLib {
 
 #define	EXIT_FAILURE	1
-#define	ASSERT(expr)	if (!expr) PrintMessage(#expr, __FILE__, __LINE__, GetLastError())
 
-	__forceinline void PrintMessage(LPCSTR lineDesc, LPCSTR fileName, int lineNo, DWORD errNum) {
+	__forceinline __declspec(noreturn) void PrintMessage(LPCSTR lineDesc, LPCSTR fileName, int lineNo, DWORD errNum) {
 		LPTSTR	lpBuffer;
 		TCHAR	errBuff[256];
 
@@ -21,13 +20,24 @@ namespace Unmanaged {
 			0,
 			NULL);
 
-		StringCchPrintf(errBuff, 256, TEXT("[ERR: %d]: %s at line %d, %s\n\nReason: %s"), errNum, fileName, lineNo, lineDesc, lpBuffer);
-		//wsprintf(errBuff, TEXT("[ERR: %d]: %s at line %d, %s\n\nReason: %s"), errNum, fileName, lineNo, lineDesc, lpBuffer);
-		WriteFile(GetStdHandle(STD_ERROR_HANDLE), errBuff, _tcslen(errBuff), &numRead, FALSE);
-		Sleep(5000);
+		StringCchPrintf(errBuff, 256, TEXT("[ERR: %d]: %s at line %d, %s\r\n\r\nReason: %s"), errNum, fileName, lineNo, lineDesc, lpBuffer);
+		System::String ^ msg = gcnew System::String(errBuff);
+		throw gcnew CAssertFailedException(msg, lineNo, %String(fileName), %String(lineDesc), (int)errNum, nullptr);
 
-		ExitProcess(EXIT_FAILURE);
+		//WriteFile(GetStdHandle(STD_ERROR_HANDLE), errBuff, _tcslen(errBuff), &numRead, FALSE);
+		//Sleep(5000);
+		//ExitProcess(EXIT_FAILURE);
 	};
+
+#ifndef ASSERT
+#define	ASSERT(expr)	do { if (!expr) PrintMessage(#expr, __FILE__, __LINE__, GetLastError()); } while (0)
+#endif
+
+#ifndef lock
+#define		lock2(mut, expr) { WaitForSingleObject(mut, INFINITE); { ## expr } ReleaseMutex(mut); }
+#define		lock(mut, expr) do { lock2(mut, expr) } while (0)
+#endif // !lock
+
 
 	__forceinline DWORD	GetSysDateTime() {
 		LPSYSTEMTIME lpSysTime = new SYSTEMTIME();
@@ -54,4 +64,5 @@ namespace Unmanaged {
 	HANDLE	GetTopMostWorkplace(HANDLE hWkp);
 
 	HANDLE	GetFocusWorkplace(HANDLE hWkp);
+
 }

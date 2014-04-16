@@ -14,4 +14,5 @@
 //
 //	Application Includes
 //
+#include	"Exceptions.h"
 #include	"Common.h"

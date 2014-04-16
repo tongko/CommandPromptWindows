@@ -13,18 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Unmanaged">
-      <UniqueIdentifier>{eadca671-2d12-4959-abef-c348915d3ce3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Unmanaged">
-      <UniqueIdentifier>{1534f5b5-6949-46fd-8a6d-1717b6ae5fd3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Unmanaged\btree">
-      <UniqueIdentifier>{a970daaa-3e30-46b7-9884-1e922b0f404a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Unmanaged\btree">
-      <UniqueIdentifier>{9fac06ce-365b-487e-92de-d10d28516d1d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Configs">
       <UniqueIdentifier>{277e56a8-55bd-4d78-bed9-1355736cd22f}</UniqueIdentifier>
     </Filter>
@@ -45,30 +33,6 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>Header Files\Unmanaged</Filter>
-    </ClInclude>
-    <ClInclude Include="Queue.h">
-      <Filter>Header Files\Unmanaged</Filter>
-    </ClInclude>
-    <ClInclude Include="LinkedList.h">
-      <Filter>Header Files\Unmanaged</Filter>
-    </ClInclude>
-    <ClInclude Include="SysEventMonitor.h">
-      <Filter>Header Files\Unmanaged</Filter>
-    </ClInclude>
-    <ClInclude Include="Common.h">
-      <Filter>Header Files\Unmanaged</Filter>
-    </ClInclude>
-    <ClInclude Include="EventMessage.h">
-      <Filter>Header Files\Unmanaged</Filter>
-    </ClInclude>
-    <ClInclude Include="Comparable.h">
-      <Filter>Header Files\Unmanaged\btree</Filter>
-    </ClInclude>
-    <ClInclude Include="RedBlackNode.h">
-      <Filter>Header Files\Unmanaged\btree</Filter>
-    </ClInclude>
     <ClInclude Include="WorkspaceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -81,6 +45,12 @@
     <ClInclude Include="Renderer.h">
       <Filter>Header Files\Drawing</Filter>
     </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Exceptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -88,9 +58,6 @@
     </ClCompile>
     <ClCompile Include="Stdafx.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SysEventMonitor.cpp">
-      <Filter>Source Files\Unmanaged</Filter>
     </ClCompile>
     <ClCompile Include="WorkspaceManager.cpp">
       <Filter>Source Files</Filter>
