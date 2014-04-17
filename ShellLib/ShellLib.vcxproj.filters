@@ -25,15 +25,18 @@
     <Filter Include="Source Files\Drawing">
       <UniqueIdentifier>{78d1d0b2-c21d-4479-b6ed-5ec473fbc1a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Workspaces">
+      <UniqueIdentifier>{e5b5ca83-7196-4226-af1b-c0cb71fa0d5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Workspaces">
+      <UniqueIdentifier>{6c501105-e348-435c-b477-2580a51be990}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WorkspaceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WorkspaceConfigSection.h">
@@ -51,15 +54,24 @@
     <ClInclude Include="Exceptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Workspace.h">
+      <Filter>Header Files\Workspaces</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkspaceManager.h">
+      <Filter>Header Files\Workspaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Coord.h">
+      <Filter>Header Files\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Size.h">
+      <Filter>Header Files\Drawing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WorkspaceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WorkspaceConfigSection.cpp">
@@ -69,6 +81,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Workspace.cpp">
+      <Filter>Source Files\Workspaces</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkspaceManager.cpp">
+      <Filter>Source Files\Workspaces</Filter>
+    </ClCompile>
+    <ClCompile Include="Size.cpp">
+      <Filter>Source Files\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Coord.cpp">
       <Filter>Source Files\Drawing</Filter>
     </ClCompile>
   </ItemGroup>

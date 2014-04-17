@@ -3,7 +3,7 @@
 #include "WorkspaceManager.h"
 
 
-namespace ShellLib {
+namespace ShellLib { namespace Workspaces {
 
 	CWorkspaceManager::CWorkspaceManager() 
 	{
@@ -53,4 +53,4 @@ namespace ShellLib {
 
 #pragma endregion
 
-}
+}}

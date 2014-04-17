@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ShellLib {
+namespace ShellLib { namespace Workspaces {
 
 	using namespace ShellLib::Configs;
 	using namespace System;
@@ -55,4 +55,4 @@ namespace ShellLib {
 		Point			m_windowPosition;
 	};
 
-}
+}}
