@@ -1,13 +1,12 @@
 #include "Stdafx.h"
-#include "Size.h"
 #include "Coord.h"
 
 namespace ShellLib { namespace Drawing {
 
 #pragma region Constructor
-	/*********************
-	*	Constructor
-	**********************/
+	/********************
+	*    Constructor    *
+	********************/
 
 	CCoord::CCoord(CSize sz) {
 		x = sz.Width;
@@ -28,12 +27,12 @@ namespace ShellLib { namespace Drawing {
 
 
 #pragma region Properties
-	/******************
-	* Properties
+	/*******************
+	*    Properties    *
 	*******************/
 
 	bool	CCoord::IsEmpty::get(void) {
-		return x == 0 && y == 0;
+		return x == y == 0;
 	}
 
 	short	CCoord::X::get(void) {
@@ -54,26 +53,9 @@ namespace ShellLib { namespace Drawing {
 
 
 #pragma	region	Operations
-
-	CCoord::operator ShellLib::Drawing::CSize(CCoord c) {
-		return CSize(c.x, c.y);
-	}
-
-	CCoord CCoord::operator+ (CCoord c, CSize sz) {
-		return CCoord::Add(c, sz);
-	}
-
-	CCoord CCoord::operator- (CCoord c, CSize sz) {
-		return CCoord::Subtract(c, sz);
-	}
-
-	bool CCoord::operator== (CCoord left, CCoord right) {
-		return (left.x == right.x && left.y == right.y);
-	}
-
-	bool CCoord::operator!= (CCoord left, CCoord right) {
-		return !(left == right);
-	}
+	/*******************
+	*    Operations    *
+	*******************/
 
 	CCoord	CCoord::Add(CCoord c, CSize sz) {
 		return CCoord(c.x + sz.Width, c.y + sz.Height);
@@ -92,9 +74,7 @@ namespace ShellLib { namespace Drawing {
 	}
 
 	int		CCoord::GetHashCode(void) {
-		static int hash = x ^ y;	//	Hopefully this will remain unchange
-
-		return hash;
+		return x ^ y;
 	}
 
 	void	CCoord::Offset(CCoord c) {
@@ -107,15 +87,9 @@ namespace ShellLib { namespace Drawing {
 	}
 
 	String ^	CCoord::ToString(void) {
-		return "{X=" + x.ToString(System::Globalization::CultureInfo::CurrentCulture)
-			+ ",Y=" + y.ToString(System::Globalization::CultureInfo::CurrentCulture)
+		return "{X=" + x.ToString(CultureInfo::CurrentCulture)
+			+ ",Y=" + y.ToString(CultureInfo::CurrentCulture)
 			+ "}";
-	}
-
-	CCoord::operator int(CCoord c) {
-		int result = c.x;
-		result << 16;
-		result += c.y;
 	}
 
 #pragma endregion

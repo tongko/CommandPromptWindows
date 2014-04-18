@@ -21,7 +21,7 @@ namespace ShellLib { namespace Workspaces {
 
 	public:
 		void		Initialize(CWorkspaceConfigSection ^ configSecion);
-		void		StartWorkspace();
+		//void		StartWorkspace();
 
 	public:
 		property short					Width {
@@ -36,19 +36,19 @@ namespace ShellLib { namespace Workspaces {
 			String ^	get(void);
 			void		set(String ^ value);
 		}
-		property ShellLib::CursorSize	CursorSize {
-		ShellLib::CursorSize
-						get(void);
-			void		set(ShellLib::CursorSize value);
-		}
+		//property ShellLib::CursorSize	CursorSize {
+		//ShellLib::CursorSize
+		//				get(void);
+		//	void		set(ShellLib::CursorSize value);
+		//}
 		property Point					WindowPosition {
 			Point		get(void);
 			void		set(Point value);
 		}
 
 	private:
-		ShellLib::CursorSize
-						m_cursorSize;
+	//	ShellLib::CursorSize
+//						m_cursorSize;
 		short			m_height;
 		String ^		m_name;
 		short			m_width;

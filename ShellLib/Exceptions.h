@@ -27,7 +27,7 @@ namespace ShellLib {
 		property int		LineNumber { int get(void) { return m_lineNumber; } void set(int value) { m_lineNumber = value; }}
 		property String ^	FileName { String ^ get(void) { return m_fileName; } void set(String ^ value) { m_fileName = value; }}
 		property String ^	LineDescriptor { String ^ get(void) { return m_lineDesc; } void set(String ^ value) { m_lineDesc = value; }}
-		property int		ErrorCode { int get(void) { return m_errorCode; } void set(int value) { m_errorCode = value }}
+		property int		ErrorCode { int get(void) { return m_errorCode; } void set(int value) { m_errorCode = value; }}
 
 	private:
 		int					m_lineNumber;

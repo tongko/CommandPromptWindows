@@ -1,7 +1,20 @@
 #pragma once
 
+namespace ShellLib {
+	namespace Drawing {
+		//	To solve circular reference;
+		value class CSize;
+	}
+}
+
+#include	"Size.h"
+
 namespace ShellLib { namespace Drawing {
 
+	using namespace System::Diagnostics;
+	using namespace System::Globalization;
+
+	[DebuggerDisplayAttribute("{X: {X}, Y: {Y}}")]
 	value class CCoord
 	{
 	public:		//	Constructor
@@ -10,7 +23,8 @@ namespace ShellLib { namespace Drawing {
 		CCoord(int dw);
 
 	public:		//	Attributes
-		static initonly CCoord Empty = { 0, 0 };
+		static initonly CCoord Empty = CCoord(0, 0);
+
 	private:
 		short x;
 		short y;
@@ -30,12 +44,12 @@ namespace ShellLib { namespace Drawing {
 		static CCoord	Subtract(CCoord c, CSize sz);
 
 	public:		// Operator overloads
-		static CCoord	operator +(CCoord c, CSize sz);
-		static bool		operator ==(CCoord left, CCoord right);
-		static explicit operator CSize(CCoord c);
-		static explicit operator int(CCoord c);
-		static bool		operator !=(CCoord left, CCoord right);
-		static CCoord	operator -(CCoord c, CSize sz);
+		static CCoord	operator +(CCoord c, CSize sz) { return CCoord::Add(c, sz); };
+		static bool		operator ==(CCoord left, CCoord right) { return (left.x == right.x && left.y == right.y); };
+		static explicit operator CSize(CCoord c) { return CSize(c.x, c.y); };
+		static explicit operator int(CCoord c) { int result = c.y; result = (result << 16) & 0xFFFF; result += c.x; return result; };
+		static bool		operator !=(CCoord left, CCoord right) { return !(left == right); };
+		static CCoord	operator -(CCoord c, CSize sz) { return CCoord::Subtract(c, sz); };
 	};
 
 }}

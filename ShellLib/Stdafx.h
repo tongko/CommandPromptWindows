@@ -16,3 +16,6 @@
 //
 #include	"Exceptions.h"
 #include	"Common.h"
+
+#include	"Coord.h"
+#include	"Size.h"

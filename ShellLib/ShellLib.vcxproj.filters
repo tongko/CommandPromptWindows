@@ -66,6 +66,9 @@
     <ClInclude Include="Size.h">
       <Filter>Header Files\Drawing</Filter>
     </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>Header Files\Drawing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -93,6 +96,9 @@
       <Filter>Source Files\Drawing</Filter>
     </ClCompile>
     <ClCompile Include="Coord.cpp">
+      <Filter>Source Files\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Rectangle.cpp">
       <Filter>Source Files\Drawing</Filter>
     </ClCompile>
   </ItemGroup>

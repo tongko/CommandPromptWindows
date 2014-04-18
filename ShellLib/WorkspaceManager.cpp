@@ -7,7 +7,7 @@ namespace ShellLib { namespace Workspaces {
 
 	CWorkspaceManager::CWorkspaceManager() 
 	{
-		m_cursorSize = ShellLib::CursorSize::Small;
+//		m_cursorSize = ShellLib::CursorSize::Small;
 		m_height = 25;
 		m_width = 80;
 		m_windowPosition = Point(1, 1);
@@ -20,8 +20,8 @@ namespace ShellLib { namespace Workspaces {
 
 #pragma region Properties
 
-	CursorSize	CWorkspaceManager::CursorSize::get(void) { return m_cursorSize; }
-	void	CWorkspaceManager::CursorSize::set(ShellLib::CursorSize value) { m_cursorSize = value; }
+//	CursorSize	CWorkspaceManager::CursorSize::get(void) { return m_cursorSize; }
+//	void	CWorkspaceManager::CursorSize::set(ShellLib::CursorSize value) { m_cursorSize = value; }
 
 	short	CWorkspaceManager::Height::get(void) { return m_height; }
 	void	CWorkspaceManager::Height::set(short value) { m_height = value; }
@@ -44,7 +44,7 @@ namespace ShellLib { namespace Workspaces {
 		if (configSection == nullptr)
 			throw gcnew ArgumentNullException("configSection");
 
-		m_cursorSize = configSection->CursorSize;
+//		m_cursorSize = configSection->CursorSize;
 		m_height = configSection->Height;
 		m_name = configSection->Name;
 		m_width = configSection->Width;

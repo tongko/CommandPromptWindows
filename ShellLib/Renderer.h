@@ -11,11 +11,11 @@ namespace ShellLib { namespace Drawing {
 		~CRenderer(void);
 
 	public:
-		void		Render(void);
-		void		InvalidateRect(const SMALL_RECT & srRegion);
-		void		Invalidate(void);
-		void		ValidateRect(const SMALL_RECT & srRegion);
-		void		Clear(void);
+		//void		Render(void);
+		//void		InvalidateRect(const SMALL_RECT & srRegion);
+		//void		Invalidate(void);
+		//void		ValidateRect(const SMALL_RECT & srRegion);
+		//void		Clear(void);
 		void		SetConsoleInfo(PCONSOLE_SCREEN_BUFFER_INFOEX pcsbi);
 
 	private:

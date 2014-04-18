@@ -1,13 +1,12 @@
 #include "stdafx.h"
-#include "WorkspaceManager.h"
 #include "WorkspaceConfigSection.h"
 
 namespace ShellLib { namespace Configs {
 
 #pragma region Properties
 
-	CursorSize	CWorkspaceConfigSection::CursorSize::get(void) { return (ShellLib::CursorSize) this["cursorSize"]; }
-	void	CWorkspaceConfigSection::CursorSize::set(ShellLib::CursorSize value) { this["cursorSize"] = value; }
+	//CursorSize	CWorkspaceConfigSection::CursorSize::get(void) { return (ShellLib::CursorSize) this["cursorSize"]; }
+	//void	CWorkspaceConfigSection::CursorSize::set(ShellLib::CursorSize value) { this["cursorSize"] = value; }
 
 	short	CWorkspaceConfigSection::Height::get(void) { return (short)this["height"]; }
 	void	CWorkspaceConfigSection::Height::set(short value) { this["height"] = value; }

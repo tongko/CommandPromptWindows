@@ -2,7 +2,6 @@
 
 namespace ShellLib { namespace Configs {
 
-	using namespace ShellLib;
 	using namespace System;
 	using namespace System::Configuration;
 	using namespace System::Drawing;
@@ -29,11 +28,11 @@ namespace ShellLib { namespace Configs {
 			String ^	get(void);
 			void		set(String ^ value);
 		}
-		[ConfigurationPropertyAttribute("cursorSize", IsRequreid = false)]
-		property CursorSize	CursorSize {
-			CursorSize	get(void);
-			void		set(ShellLib::CursorSize value);
-		}
+		//[ConfigurationPropertyAttribute("cursorSize", IsRequreid = false)]
+		//property CursorSize	CursorSize {
+		//	CursorSize	get(void);
+		//	void		set(ShellLib::CursorSize value);
+		//}
 		[ConfigurationPropertyAttribute("windowPosition", IsRequired = false)]
 		property Point	WindowPosition {
 			Point		get(void);

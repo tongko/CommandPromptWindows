@@ -7,7 +7,7 @@ namespace ShellLib { namespace Drawing {
 		if (hOut == INVALID_HANDLE_VALUE)
 			throw gcnew InvalidOperationException("Attemp to create renderer on corrupted target.");
 		
-		PCONSOLE_SCREEN_BUFFER_INFOEX pcsbi;
+		PCONSOLE_SCREEN_BUFFER_INFOEX pcsbi = new CONSOLE_SCREEN_BUFFER_INFOEX();
 		pcsbi->cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
 		if (!GetConsoleScreenBufferInfoEx(hOut, pcsbi)) {
 			int hr = Marshal::GetHRForLastWin32Error();
@@ -37,6 +37,6 @@ namespace ShellLib { namespace Drawing {
 		m_pcsbi->wPopupAttributes = pcsbi->wPopupAttributes;
 
 		//	Repaint Workspace.
-		Render();
+		//Render();
 	}
 }}

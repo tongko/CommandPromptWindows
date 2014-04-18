@@ -12,47 +12,47 @@ namespace ShellLib {
 
 
 	void CConInit::Initialize(CWorkspaceConfigSection ^ configSection) {
-		StdOut = CreateScreenBuffer();
-		StdErr = GetStdHandle(STD_ERROR_HANDLE);
-		StdIn = GetStdHandle(STD_INPUT_HANDLE);
+		
 
-		//	Set screen buffer to configured size
-		COORD crdSize = { configSection->Width, configSection->Height };
-		ASSERT(SetConsoleScreenBufferSize(StdOut, crdSize));
+			StdOut = CreateScreenBuffer();
+			StdErr = GetStdHandle(STD_ERROR_HANDLE);
+			StdIn = GetStdHandle(STD_INPUT_HANDLE);
 
-		ResetScreenBufferInfo();
+			//	Set screen buffer to configured size
+			COORD crdSize = { configSection->Width, configSection->Height };
+			ASSERT(SetConsoleScreenBufferSize(StdOut, crdSize));
 
-
+			ResetScreenBufferInfoInternal();
 	}
 
 	//
 	//	Reset console screen buffer info
 	//
 	void	CConInit::ResetScreenBufferInfo(void) {
-		lock(m_hSync, {
-
-			ASSERT((StdOut != INVALID_HANDLE_VALUE));
-
-			//	Get screen buffer info.
-			if (m_pcsbi != NULL)
-				delete m_pcsbi;
-
-			m_pcsbi = new CONSOLE_SCREEN_BUFFER_INFOEX();
-			m_pcsbi->cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
-			ASSERT(GetConsoleScreenBufferInfoEx(StdOut, m_pcsbi));
-		});
+			ResetScreenBufferInfoInternal();
 	}
 
+	void	CConInit::ResetScreenBufferInfoInternal(void) {
+		ASSERT((StdOut != INVALID_HANDLE_VALUE));
+
+		//	Get screen buffer info.
+		if (m_pcsbi != NULL)
+			delete m_pcsbi;
+
+		m_pcsbi = new CONSOLE_SCREEN_BUFFER_INFOEX();
+		m_pcsbi->cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+		ASSERT(GetConsoleScreenBufferInfoEx(StdOut, m_pcsbi));
+	}
+
+
+
 	//
-	//	Get Screen Buffer Information
+	//	Get Screen Buffer Information interface
 	//
 	PCONSOLE_SCREEN_BUFFER_INFOEX	CConInit::GetScreenBufferInfo(void) const {
 		PCONSOLE_SCREEN_BUFFER_INFOEX p;
 
-		lock(m_hSync, {
 			p = m_pcsbi;
-		});
-
 		return p;
 	}
 
