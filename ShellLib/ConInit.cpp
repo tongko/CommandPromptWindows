@@ -4,6 +4,8 @@
 
 namespace ShellLib {
 
+	using namespace ShellLib::Threading;
+
 	CConInit::CConInit()
 	{
 		m_hSync = CreateMutex(NULL, FALSE, CONINIT_MUTEX);
@@ -12,24 +14,25 @@ namespace ShellLib {
 
 
 	void CConInit::Initialize(CWorkspaceConfigSection ^ configSection) {
-		
+		CLockGuard lock(m_hSync);
 
-			StdOut = CreateScreenBuffer();
-			StdErr = GetStdHandle(STD_ERROR_HANDLE);
-			StdIn = GetStdHandle(STD_INPUT_HANDLE);
+		StdOut = CreateScreenBuffer();
+		StdErr = GetStdHandle(STD_ERROR_HANDLE);
+		StdIn = GetStdHandle(STD_INPUT_HANDLE);
 
-			//	Set screen buffer to configured size
-			COORD crdSize = { configSection->Width, configSection->Height };
-			ASSERT(SetConsoleScreenBufferSize(StdOut, crdSize));
+		//	Set screen buffer to configured size
+		COORD crdSize = { configSection->Width, configSection->Height };
+		ASSERT(SetConsoleScreenBufferSize(StdOut, crdSize));
 
-			ResetScreenBufferInfoInternal();
+		ResetScreenBufferInfoInternal();
 	}
 
 	//
 	//	Reset console screen buffer info
 	//
 	void	CConInit::ResetScreenBufferInfo(void) {
-			ResetScreenBufferInfoInternal();
+		CLockGuard lock(m_hSync);
+		ResetScreenBufferInfoInternal();
 	}
 
 	void	CConInit::ResetScreenBufferInfoInternal(void) {
@@ -44,16 +47,12 @@ namespace ShellLib {
 		ASSERT(GetConsoleScreenBufferInfoEx(StdOut, m_pcsbi));
 	}
 
-
-
 	//
 	//	Get Screen Buffer Information interface
 	//
 	PCONSOLE_SCREEN_BUFFER_INFOEX	CConInit::GetScreenBufferInfo(void) const {
-		PCONSOLE_SCREEN_BUFFER_INFOEX p;
-
-			p = m_pcsbi;
-		return p;
+		CLockGuard lock(m_hSync);
+		return m_pcsbi;
 	}
 
 	HANDLE	CConInit::CreateScreenBuffer(void) {

@@ -30,7 +30,7 @@ namespace ShellLib {
 	__forceinline DWORD	GetSysDateTime() {
 		LPSYSTEMTIME lpSysTime = new SYSTEMTIME();
 		GetSystemTime(lpSysTime);
-		LPFILETIME lpFileTime = new FILETIME();
+		LPFILETIME lpFileTime = new ::FILETIME();
 		ASSERT(SystemTimeToFileTime(lpSysTime, lpFileTime));
 
 		delete lpSysTime;

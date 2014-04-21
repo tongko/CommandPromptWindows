@@ -76,13 +76,17 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coord.h" />
+    <ClInclude Include="Drawing.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="ConInit.h" />
+    <ClInclude Include="LockGuard.h" />
+    <ClInclude Include="Message.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="resource.h" />
@@ -91,11 +95,13 @@
     <ClInclude Include="Workspace.h" />
     <ClInclude Include="WorkspaceConfigSection.h" />
     <ClInclude Include="WorkspaceManager.h" />
+    <ClInclude Include="Workspaces.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="ConInit.cpp" />
     <ClCompile Include="Coord.cpp" />
+    <ClCompile Include="Message.cpp" />
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Size.cpp" />
