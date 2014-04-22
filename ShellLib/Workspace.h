@@ -3,6 +3,7 @@
 namespace ShellLib { namespace Workspaces {
 
 	using namespace ShellLib::Drawing;
+	using namespace System::Collections::Generic;
 
 	ref class CWorkspace
 	{
@@ -20,6 +21,16 @@ namespace ShellLib { namespace Workspaces {
 		property bool		RestroreBox { bool get(void); void set(bool value); }
 
 	protected:		//	Operations
+		virtual void		OnActivate(void);
+		virtual void		OnLoad(void);
+		virtual void		OnFocus(bool focus);
+		virtual void		OnMouseEnter(bool leave);
+		virtual void		OnMouseMove(void);
+		virtual void		OnMouseButtonClicked(int buttonId);
+		virtual void		OnKeyDown();	// <== needs argument
+		virtual void		OnKeyUp();
+		virtual void		OnKeyPress();
+		virtual void		OnSizeChanged(void);	
 		virtual void		WndProc(CMessage % message);
 
 	private:

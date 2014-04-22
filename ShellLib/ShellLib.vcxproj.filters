@@ -81,6 +81,12 @@
     <ClInclude Include="Workspaces.h">
       <Filter>Header Files\Workspaces</Filter>
     </ClInclude>
+    <ClInclude Include="IWorkspace.h">
+      <Filter>Header Files\Workspaces</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkspaceCollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -115,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="Message.cpp">
       <Filter>Source Files\Workspaces</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkspaceCollection.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

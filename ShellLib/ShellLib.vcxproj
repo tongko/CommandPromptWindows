@@ -85,6 +85,7 @@
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="ConInit.h" />
+    <ClInclude Include="IWorkspace.h" />
     <ClInclude Include="LockGuard.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Rectangle.h" />
@@ -93,6 +94,7 @@
     <ClInclude Include="Size.h" />
     <ClInclude Include="Stdafx.h" />
     <ClInclude Include="Workspace.h" />
+    <ClInclude Include="WorkspaceCollection.h" />
     <ClInclude Include="WorkspaceConfigSection.h" />
     <ClInclude Include="WorkspaceManager.h" />
     <ClInclude Include="Workspaces.h" />
@@ -110,6 +112,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Workspace.cpp" />
+    <ClCompile Include="WorkspaceCollection.cpp" />
     <ClCompile Include="WorkspaceConfigSection.cpp" />
     <ClCompile Include="WorkspaceManager.cpp" />
   </ItemGroup>
