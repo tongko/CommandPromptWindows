@@ -60,23 +60,11 @@
     <ClInclude Include="WorkspaceManager.h">
       <Filter>Header Files\Workspaces</Filter>
     </ClInclude>
-    <ClInclude Include="Coord.h">
-      <Filter>Header Files\Drawing</Filter>
-    </ClInclude>
-    <ClInclude Include="Size.h">
-      <Filter>Header Files\Drawing</Filter>
-    </ClInclude>
-    <ClInclude Include="Rectangle.h">
-      <Filter>Header Files\Drawing</Filter>
-    </ClInclude>
     <ClInclude Include="LockGuard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Message.h">
       <Filter>Header Files\Workspaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Drawing.h">
-      <Filter>Header Files\Drawing</Filter>
     </ClInclude>
     <ClInclude Include="Workspaces.h">
       <Filter>Header Files\Workspaces</Filter>
@@ -85,7 +73,7 @@
       <Filter>Header Files\Workspaces</Filter>
     </ClInclude>
     <ClInclude Include="WorkspaceCollection.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Workspaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -110,20 +98,11 @@
     <ClCompile Include="WorkspaceManager.cpp">
       <Filter>Source Files\Workspaces</Filter>
     </ClCompile>
-    <ClCompile Include="Size.cpp">
-      <Filter>Source Files\Drawing</Filter>
-    </ClCompile>
-    <ClCompile Include="Coord.cpp">
-      <Filter>Source Files\Drawing</Filter>
-    </ClCompile>
-    <ClCompile Include="Rectangle.cpp">
-      <Filter>Source Files\Drawing</Filter>
-    </ClCompile>
     <ClCompile Include="Message.cpp">
       <Filter>Source Files\Workspaces</Filter>
     </ClCompile>
     <ClCompile Include="WorkspaceCollection.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Workspaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,8 +6,9 @@ namespace ShellLib { namespace Workspaces {
 
 	using namespace ShellLib::Drawing;
 
-	interface class IWorkspace
+	interface struct IWorkspace
 	{
+	public:
 		//	Properties
 		property CCoord		Location { CCoord get(void); void set(CCoord value); }
 		property CSize		Size { CSize get(void); void set(CSize value); }
