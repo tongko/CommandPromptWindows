@@ -12,16 +12,4 @@ namespace ShellLib { namespace Workspaces {
 
 #endif // !_WORKSPACE_TYPEDEF_
 
-#ifndef _WORKSPACE_DECL_
-#define	_WORKSPACE_DECL_
-	ref class CWorkspace;
-#endif // !_WORKSPACE_DECL_
-
-
-	public enum EWorkspaceBorderStyle {
-		None,
-		Single,
-		Double
-	};
-
 }}
