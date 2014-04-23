@@ -1,5 +1,6 @@
 #pragma once
 #include	"Stdafx.h"
+#include	"ShellSettings.h"
 #include	"Message.h"
 #include	"Workspace.h"
 

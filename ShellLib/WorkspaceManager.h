@@ -23,7 +23,7 @@ namespace ShellLib { namespace Workspaces {
 		property String ^				Name;
 		property CursorSizeEnum			CursorSize;
 		property Point					WindowPosition;
-		property CShellSettings ^		Settings;
+		property CShellLibSettings ^	Settings;
 
 	};
 

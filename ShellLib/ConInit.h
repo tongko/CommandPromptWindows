@@ -2,7 +2,7 @@
 
 namespace ShellLib {
 
-	using namespace Configs;
+	using namespace ShellLib::Configs;
 
 	private class CConInit
 	{

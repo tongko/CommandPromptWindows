@@ -43,9 +43,9 @@
   <ItemGroup>
     <Compile Include="Configs\ShellConfigElement.cs" />
     <Compile Include="Configs\ShellLibConfigSection.cs" />
-    <Compile Include="Drawing\CCoord.cs" />
-    <Compile Include="Drawing\CRectangle.cs" />
-    <Compile Include="Drawing\CSize.cs" />
+    <Compile Include="Drawing\Coord.cs" />
+    <Compile Include="Drawing\Rectangle.cs" />
+    <Compile Include="Drawing\Size.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Workspaces\BorderStyleType.cs" />
     <Compile Include="Workspaces\CursorSize.cs" />

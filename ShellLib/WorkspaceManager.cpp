@@ -23,7 +23,7 @@ namespace ShellLib { namespace Workspaces {
 		if (configSection == nullptr)
 			throw gcnew ArgumentNullException("configSection");
 
-		Settings = CShellSettings::Configure(configSection);
+		Settings = CShellLibSettings::Configure(configSection);
 
 		CursorSize = Settings->CursorSize;
 		Height = Settings->Layout.WindowSize.Height;

@@ -43,6 +43,8 @@ namespace ShellLib {
 		layout.WindowLocation = CCoord(0, 0);
 		layout.WindowSize = CSize(80, 25);
 		layout.MaxWindow = false;
+
+		return layout;
 	}
 
 	Point		CShellLayout::GetWindowLocation(void) {

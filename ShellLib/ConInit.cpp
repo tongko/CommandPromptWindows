@@ -37,8 +37,10 @@ namespace ShellLib {
 		StdOut = StdErr = GetStdHandle(STD_OUTPUT_HANDLE);
 		StdIn = GetStdHandle(STD_INPUT_HANDLE);
 
+		SaveShellCaption();
 
-		CreateScreenBuffer();
+		StdOut = CreateScreenBuffer();
+
 		//	Set screen buffer to configured size
 		COORD crdSize = ConvertTo((settings->Layout.WindowSize));
 		ASSERT(SetConsoleScreenBufferSize(StdOut, crdSize));
