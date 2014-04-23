@@ -25,6 +25,9 @@ namespace ShellLib { namespace Workspaces {
 		virtual void				Activate(void);
 		virtual void				Focus(void);
 
+		virtual void				Invalidate(void);
+		virtual void				Update(void);
+
 	protected:		//	Operations
 		virtual void				OnActivate(void);
 		virtual void				OnLoad(void);

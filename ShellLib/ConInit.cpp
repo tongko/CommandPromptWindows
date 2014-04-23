@@ -1,10 +1,23 @@
 #include "Stdafx.h"
-#include "WorkspaceConfigSection.h"
 #include "ConInit.h"
 
 namespace ShellLib {
 
 	using namespace ShellLib::Threading;
+
+	COORD ConvertTo(CCoord manage) {
+		COORD c = COORD();
+		c.X = manage.X;
+		c.Y = manage.Y;
+		return c;
+	}
+
+	COORD ConvertTo(CSize manage) {
+		COORD c = COORD();
+		c.X = manage.Width;
+		c.Y = manage.Height;
+		return c;
+	}
 
 	CConInit::CConInit()
 	{
@@ -12,16 +25,22 @@ namespace ShellLib {
 		ASSERT((m_hSync != NULL));
 	}
 
+	CConInit::~CConInit(void) {
+		//	Cleaning up
+		if (m_oldCaption != NULL)
+			delete[] m_oldCaption;
+	}
 
-	void CConInit::Initialize(CWorkspaceConfigSection ^ configSection) {
+
+	void CConInit::Initialize(CShellLibSettings ^ settings) {
 		CLockGuard lock(m_hSync);
-
-		StdOut = CreateScreenBuffer();
-		StdErr = GetStdHandle(STD_ERROR_HANDLE);
+		StdOut = StdErr = GetStdHandle(STD_OUTPUT_HANDLE);
 		StdIn = GetStdHandle(STD_INPUT_HANDLE);
 
+
+		CreateScreenBuffer();
 		//	Set screen buffer to configured size
-		COORD crdSize = { configSection->Width, configSection->Height };
+		COORD crdSize = ConvertTo((settings->Layout.WindowSize));
 		ASSERT(SetConsoleScreenBufferSize(StdOut, crdSize));
 
 		ResetScreenBufferInfoInternal();
@@ -67,4 +86,15 @@ namespace ShellLib {
 		return h;
 	}
 
+	void							CConInit::SaveShellCaption(void) {
+		TCHAR	szOld[MAX_PATH];
+		DWORD	charRead = GetConsoleTitle(szOld, MAX_PATH);
+		
+		if (charRead == 0) return;
+		m_oldCaption = new TCHAR[charRead]();
+		HRESULT hr = StringCchCopy(m_oldCaption, charRead, szOld);
+		if (FAILED(hr)) {
+			System::Runtime::InteropServices::Marshal::ThrowExceptionForHR(hr);
+		}
+	}
 }

@@ -17,3 +17,4 @@
 #include	"LockGuard.h"
 #include	"Exceptions.h"
 #include	"Common.h"
+#include	"ShellSettings.h"

@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,11 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configs\ShellConfigElement.cs" />
+    <Compile Include="Configs\ShellLibConfigSection.cs" />
     <Compile Include="Drawing\CCoord.cs" />
     <Compile Include="Drawing\CRectangle.cs" />
     <Compile Include="Drawing\CSize.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Workspaces\BorderStyleType.cs" />
+    <Compile Include="Workspaces\CursorSize.cs" />
     <Compile Include="Workspaces\IWorkspaces.cs" />
     <Compile Include="Workspaces\WorkspaceCollection.cs" />
   </ItemGroup>

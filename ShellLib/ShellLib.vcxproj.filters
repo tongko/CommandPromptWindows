@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Configs">
-      <UniqueIdentifier>{277e56a8-55bd-4d78-bed9-1355736cd22f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Configs">
-      <UniqueIdentifier>{d4cc4c99-d5db-4290-b5b0-2d481dbb2854}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Drawing">
       <UniqueIdentifier>{46481860-6b1e-4654-a6f8-23b1f2491eb9}</UniqueIdentifier>
     </Filter>
@@ -35,12 +29,6 @@
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WorkspaceConfigSection.h">
-      <Filter>Header Files\Configs</Filter>
     </ClInclude>
     <ClInclude Include="ConInit.h">
       <Filter>Header Files</Filter>
@@ -69,6 +57,12 @@
     <ClInclude Include="Workspaces.h">
       <Filter>Header Files\Workspaces</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShellSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -76,9 +70,6 @@
     </ClCompile>
     <ClCompile Include="Stdafx.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WorkspaceConfigSection.cpp">
-      <Filter>Source Files\Configs</Filter>
     </ClCompile>
     <ClCompile Include="ConInit.cpp">
       <Filter>Source Files</Filter>
@@ -94,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="Message.cpp">
       <Filter>Source Files\Workspaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellSettings.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

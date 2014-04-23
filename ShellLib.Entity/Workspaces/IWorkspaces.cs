@@ -17,5 +17,8 @@ namespace ShellLib.Workspaces
 		//	Operations
 		void Activate();
 		void Focus();
+
+		void Invalidate();
+		void Update();
 	}
 }

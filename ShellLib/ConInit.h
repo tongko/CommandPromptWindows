@@ -11,13 +11,14 @@ namespace ShellLib {
 		~CConInit();
 
 	public:
-		void			Initialize(CWorkspaceConfigSection ^ configSection);
+		void			Initialize(CShellLibSettings ^ settings);
 		void			ResetScreenBufferInfo(void);
 		PCONSOLE_SCREEN_BUFFER_INFOEX	GetScreenBufferInfo(void) const;
 
 	private:
 		void			ResetScreenBufferInfoInternal(void);
 		static HANDLE	CreateScreenBuffer(void);
+		void			SaveShellCaption(void);
 
 	public:
 		const LPCTSTR	CONINIT_MUTEX = TEXT("CONINITSYNCOBJ");
@@ -28,6 +29,7 @@ namespace ShellLib {
 	private:
 		PCONSOLE_SCREEN_BUFFER_INFOEX m_pcsbi;
 		HANDLE			m_hSync;
+		LPTSTR			m_oldCaption;
 	};
 
 }

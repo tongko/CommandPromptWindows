@@ -1,6 +1,7 @@
 #pragma once
 #include	"Stdafx.h"
 #include	"Message.h"
+#include	"Workspace.h"
 
 namespace ShellLib { namespace Workspaces {
 
