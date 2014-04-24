@@ -7,11 +7,11 @@
 
 #include "targetver.h"
 
-#include <Windows.h>
-#include <stdio.h>
-#include <tchar.h>
-#include <stdio.h>
-#include <iostream>
-
+#include	<Windows.h>
+#include	<stdio.h>
+#include	<tchar.h>
+#include	<stdio.h>
+#include	<iostream>
+#include	<strsafe.h>
 
 // TODO: reference additional headers your program requires here

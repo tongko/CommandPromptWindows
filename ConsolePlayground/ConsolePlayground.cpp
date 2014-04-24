@@ -6,6 +6,7 @@
 #define		WIDTH		30
 #define		HEIGHT		4
 
+HANDLE		gOut;
 //void WriteChar(CHAR_INFO info[], int x, int y, TCHAR *chs, int len) {
 //	int xpos = x;
 //	CHAR_INFO * ci;
@@ -29,7 +30,7 @@ void ReadKey(HANDLE hInput)
 		ReadConsoleInput(hInput, ir, 10, &read);
 		for (DWORD i = 0; i < read; i++)
 		{
-			static bool flag = false;
+			static BOOL flag = FALSE;
 			if (ir[i].EventType == KEY_EVENT)
 			{
 				if (ir[i].Event.KeyEvent.wVirtualKeyCode == VK_RETURN) {
@@ -119,31 +120,127 @@ void ThreadProc(LPVOID data) {
 		tm->Func2();
 }
 
+void WriteToConsole(LPCTSTR msg) {
+	size_t length = 0;
+	HRESULT hr = StringCchLength(msg, MAX_PATH, &length);
+	if (FAILED(hr)) {
+		printf("\r\nFailed to get string length. HRESULT: %d\r\n", hr);
+		exit(1);
+	}
+
+	DWORD charWritten = 0;
+	WriteConsole(gOut, msg, length, &charWritten, NULL);
+}
+
+void ErrorExit(LPTSTR lpszFunction)
+{
+	// Retrieve the system error message for the last-error code
+
+	LPVOID lpMsgBuf;
+	LPVOID lpDisplayBuf;
+	DWORD dw = GetLastError();
+
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM |
+		FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL,
+		dw,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&lpMsgBuf,
+		0, NULL);
+
+	// Display the error message and exit the process
+
+	lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
+		(lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR));
+	StringCchPrintf((LPTSTR)lpDisplayBuf,
+		LocalSize(lpDisplayBuf) / sizeof(TCHAR),
+		TEXT("%s failed with error %d: %s"),
+		lpszFunction, dw, lpMsgBuf);
+	WriteToConsole((LPCTSTR)lpDisplayBuf);
+
+
+	LocalFree(lpMsgBuf);
+	LocalFree(lpDisplayBuf);
+	ReadKey(GetStdHandle(STD_INPUT_HANDLE));
+	ExitProcess(dw);
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	TestMutex * tm = new TestMutex();
+	gOut = GetStdHandle(STD_INPUT_HANDLE);
 
-	HANDLE aThread[2];
-	for (int i = 0; i < 2; i++)
-	{
-		aThread[i] = CreateThread(
-			NULL,       // default security attributes
-			0,          // default stack size
-			(LPTHREAD_START_ROUTINE)ThreadProc,
-			(LPVOID)tm,       // no thread function arguments
-			0,          // default creation flags
-			0); // receive thread identifier
+	HANDLE	hNew = CreateConsoleScreenBuffer(
+		GENERIC_READ | GENERIC_WRITE,
+		FILE_SHARE_READ | FILE_SHARE_WRITE,
+		NULL,
+		CONSOLE_TEXTMODE_BUFFER,
+		NULL);
+	if (hNew == INVALID_HANDLE_VALUE) {
+		ErrorExit(_T("_tmain"));
 	}
 
-	WaitForMultipleObjects(2, aThread, TRUE, INFINITE);
-
-	for (int i = 0; i < 2; i++)
-	{
-		CloseHandle(aThread[i]);
+	if (!SetConsoleActiveScreenBuffer(hNew)) {
+		ErrorExit(_T("_tmain"));
 	}
 
-	delete tm;
+	gOut = hNew;
+
+	PCONSOLE_SCREEN_BUFFER_INFOEX csbi = new CONSOLE_SCREEN_BUFFER_INFOEX();
+	csbi->cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+	if (!GetConsoleScreenBufferInfoEx(hNew, csbi)) {
+		ErrorExit(_T("_tmain"));
+	}
+
+	csbi->dwSize.X = 198;
+	csbi->dwSize.Y = 50;
+
+	if (!SetConsoleScreenBufferInfoEx(hNew, csbi)) {
+		ErrorExit(_T("_tmain"));
+	}
+
+	if (!GetConsoleScreenBufferInfoEx(hNew, csbi)) {
+		ErrorExit(_T("_tmain"));
+	}
+
+	csbi->srWindow.Left = 0;
+	csbi->srWindow.Bottom = 0;
+	csbi->srWindow.Right = csbi->dwMaximumWindowSize.X - 1;
+	csbi->srWindow.Bottom = csbi->dwMaximumWindowSize.Y - 1;
+
+	if (!SetConsoleWindowInfo(hNew, TRUE, &csbi->srWindow))
+		ErrorExit(_T("_tmain"));
+
+	delete csbi;
+
+
+
 	ReadKey(GetStdHandle(STD_INPUT_HANDLE));
+
+	//TestMutex * tm = new TestMutex();
+
+	//HANDLE aThread[2];
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	aThread[i] = CreateThread(
+	//		NULL,       // default security attributes
+	//		0,          // default stack size
+	//		(LPTHREAD_START_ROUTINE)ThreadProc,
+	//		(LPVOID)tm,       // no thread function arguments
+	//		0,          // default creation flags
+	//		0); // receive thread identifier
+	//}
+
+	//WaitForMultipleObjects(2, aThread, TRUE, INFINITE);
+
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	CloseHandle(aThread[i]);
+	//}
+
+	//delete tm;
+	//ReadKey(GetStdHandle(STD_INPUT_HANDLE));
 
 	//printf("Press enter after attached to debugger: ");
 	//ReadKey(GetStdHandle(STD_INPUT_HANDLE));
