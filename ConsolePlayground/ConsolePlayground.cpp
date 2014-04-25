@@ -5,8 +5,18 @@
 
 #define		WIDTH		30
 #define		HEIGHT		4
+void ErrorExit(LPCTSTR lpszFunction);
+void ReadAndHandleOutput(HANDLE hPipeRead);
+void PrepAndLaunchRedirectedChild(HANDLE hChildStdOut,
+	HANDLE hChildStdIn,
+	HANDLE hChildStdErr);
+DWORD WINAPI GetAndSendInputThread(LPVOID lpvThreadParam);
 
 HANDLE		gOut;
+HANDLE		hChildProcess;
+HANDLE		hStdIn = NULL; // Handle to parents std input.
+BOOL		bRunThread = TRUE;
+
 //void WriteChar(CHAR_INFO info[], int x, int y, TCHAR *chs, int len) {
 //	int xpos = x;
 //	CHAR_INFO * ci;
@@ -132,7 +142,7 @@ void WriteToConsole(LPCTSTR msg) {
 	WriteConsole(gOut, msg, length, &charWritten, NULL);
 }
 
-void ErrorExit(LPTSTR lpszFunction)
+void ErrorExit(LPCTSTR lpszFunction)
 {
 	// Retrieve the system error message for the last-error code
 
@@ -167,8 +177,7 @@ void ErrorExit(LPTSTR lpszFunction)
 	ExitProcess(dw);
 }
 
-int _tmain(int argc, _TCHAR* argv[])
-{
+void PrepareConsole(void) {
 	gOut = GetStdHandle(STD_INPUT_HANDLE);
 
 	HANDLE	hNew = CreateConsoleScreenBuffer(
@@ -213,216 +222,204 @@ int _tmain(int argc, _TCHAR* argv[])
 		ErrorExit(_T("_tmain"));
 
 	delete csbi;
+}
 
+int _tmain(int argc, _TCHAR* argv[])
+{
+	PrepareConsole();
 
+	HANDLE hOutputReadTmp, hOutputRead, hOutputWrite;
+	HANDLE hInputWriteTmp, hInputRead, hInputWrite;
+	HANDLE hErrorWrite;
+	HANDLE hThread;
+	DWORD ThreadId;
+	SECURITY_ATTRIBUTES sa;
 
+	// Set up the security attributes struct.
+	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+	sa.lpSecurityDescriptor = NULL;
+	sa.bInheritHandle = TRUE;
+
+	// Create the child output pipe.
+	if (!CreatePipe(&hOutputReadTmp, &hOutputWrite, &sa, 0))
+		ErrorExit(L"CreatePipe");
+
+	// Create a duplicate of the output write handle for the std error
+	// write handle. This is necessary in case the child application
+	// closes one of its std output handles.
+	if (!DuplicateHandle(GetCurrentProcess(), hOutputWrite,
+		GetCurrentProcess(), &hErrorWrite, 0,
+		TRUE, DUPLICATE_SAME_ACCESS))
+		ErrorExit(L"DuplicateHandle");
+
+	// Create the child input pipe.
+	if (!CreatePipe(&hInputRead, &hInputWriteTmp, &sa, 0))
+		ErrorExit(L"CreatePipe");
+
+	// Create new output read handle and the input write handles. Set
+	// the Properties to FALSE. Otherwise, the child inherits the
+	// properties and, as a result, non-closeable handles to the pipes
+	// are created.
+	if (!DuplicateHandle(GetCurrentProcess(), hOutputReadTmp,
+		GetCurrentProcess(),
+		&hOutputRead, // Address of new handle.
+		0, FALSE, // Make it uninheritable.
+		DUPLICATE_SAME_ACCESS))
+		ErrorExit(L"DupliateHandle");
+
+	if (!DuplicateHandle(GetCurrentProcess(), hInputWriteTmp,
+		GetCurrentProcess(),
+		&hInputWrite, // Address of new handle.
+		0, FALSE, // Make it uninheritable.
+		DUPLICATE_SAME_ACCESS))
+		ErrorExit(L"DupliateHandle");
+
+	// Close inheritable copies of the handles you do not want to be
+	// inherited.
+	if (!CloseHandle(hOutputReadTmp)) ErrorExit(L"CloseHandle");
+	if (!CloseHandle(hInputWriteTmp)) ErrorExit(L"CloseHandle");
+
+	// Get std input handle so you can close it and force the ReadFile to
+	// fail when you want the input thread to exit.
+	if ((hStdIn = GetStdHandle(STD_INPUT_HANDLE)) ==
+		INVALID_HANDLE_VALUE)
+		ErrorExit(L"GetStdHandle");
+
+	PrepAndLaunchRedirectedChild(hOutputWrite, hInputRead, hErrorWrite);
+
+	// Close pipe handles (do not continue to modify the parent).
+	// You need to make sure that no handles to the write end of the
+	// output pipe are maintained in this process or else the pipe will
+	// not close when the child process exits and the ReadFile will hang.
+	if (!CloseHandle(hOutputWrite)) ErrorExit(L"CloseHandle");
+	if (!CloseHandle(hInputRead)) ErrorExit(L"CloseHandle");
+	if (!CloseHandle(hErrorWrite)) ErrorExit(L"CloseHandle");
+
+	// Launch the thread that gets the input and sends it to the child.
+	hThread = CreateThread(NULL, 0, GetAndSendInputThread,
+		(LPVOID)hInputWrite, 0, &ThreadId);
+	if (hThread == NULL) ErrorExit(L"CreateThread");
+
+	// Read the child's output.
+	ReadAndHandleOutput(hOutputRead);
+	// Redirection is complete
+
+	// Force the read on the input to return by closing the stdin handle.
+	if (!CloseHandle(hStdIn)) ErrorExit(L"CloseHandle");
+
+	// Tell the thread to exit and wait for thread to die.
+	bRunThread = FALSE;
+
+	if (WaitForSingleObject(hThread, INFINITE) == WAIT_FAILED)
+		ErrorExit(L"WaitForSingleObject");
+
+	if (!CloseHandle(hOutputRead)) ErrorExit(L"CloseHandle");
+	if (!CloseHandle(hInputWrite)) ErrorExit(L"CloseHandle");
 	ReadKey(GetStdHandle(STD_INPUT_HANDLE));
 
-	//TestMutex * tm = new TestMutex();
-
-	//HANDLE aThread[2];
-	//for (int i = 0; i < 2; i++)
-	//{
-	//	aThread[i] = CreateThread(
-	//		NULL,       // default security attributes
-	//		0,          // default stack size
-	//		(LPTHREAD_START_ROUTINE)ThreadProc,
-	//		(LPVOID)tm,       // no thread function arguments
-	//		0,          // default creation flags
-	//		0); // receive thread identifier
-	//}
-
-	//WaitForMultipleObjects(2, aThread, TRUE, INFINITE);
-
-	//for (int i = 0; i < 2; i++)
-	//{
-	//	CloseHandle(aThread[i]);
-	//}
-
-	//delete tm;
-	//ReadKey(GetStdHandle(STD_INPUT_HANDLE));
-
-	//printf("Press enter after attached to debugger: ");
-	//ReadKey(GetStdHandle(STD_INPUT_HANDLE));
-
-	//HANDLE hNewScreenBuffer = CreateConsoleScreenBuffer(
-	//	GENERIC_READ | GENERIC_WRITE,
-	//	FILE_SHARE_READ | FILE_SHARE_WRITE,
-	//	NULL,
-	//	CONSOLE_TEXTMODE_BUFFER,
-	//	NULL);
-	//if (hNewScreenBuffer == INVALID_HANDLE_VALUE) {
-	//	printf("Create console screen buffer failed - (%d)\n", GetLastError());
-	//	Sleep(10000);
-	//	return 1;
-	//}
-
-	//if (!SetConsoleActiveScreenBuffer(hNewScreenBuffer)) {
-	//	printf("Set console screen buffer failed - (%d)\n", GetLastError());
-	//	Sleep(10000);
-	//	return 1;
-	//}
-
-	//PCONSOLE_SCREEN_BUFFER_INFOEX pcsbi = new CONSOLE_SCREEN_BUFFER_INFOEX();
-	//pcsbi->cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
-	//if (!GetConsoleScreenBufferInfoEx(hNewScreenBuffer, pcsbi)) {
-	//	printf("Get console screen buffer info ex failed - (%d)\n", GetLastError());
-	//	Sleep(10000);
-	//	return 1;
-	//}
-	//COORD size = pcsbi->dwSize;
-	//int length = size.X * size.Y;
-
-	////
-	////	Set color table;
-	////
-	//COLORREF * colorTable = new COLORREF[16];
-	//for (int i = 0; i < 16; i++)
-	//{
-	//	colorTable[i] = pcsbi->ColorTable[i];
-	//}
-
-
-	//COLORREF newColorTable[16] = {
-	//	0,									//	BLACK
-	//	RGB(0, 0, 128),						//	DACK BLUE
-	//	RGB(0, 128, 0),						//	DACK GREEN
-	//	RGB(0, 128, 128),					//	DACK CYAN
-	//	RGB(128, 0, 0),						//	DARK RED
-	//	RGB(128, 0, 128),					//	DARK MARGENTA
-	//	RGB(128, 128, 0),					//	DARK YELLOW
-	//	RGB(192, 192, 192),					//	LIGHT GRAY
-	//	RGB(128, 128, 128),					//	DARK GRAY
-	//	RGB(0, 0, 255),						//	BLUE
-	//	RGB(0, 255, 0),						//	GREEN
-	//	RGB(0, 255, 255),					//	CYAN
-	//	RGB(255, 0, 0),						//	RED
-	//	RGB(255, 0, 255),					//	MARGENTA
-	//	RGB(255, 255, 0),					//	YELLOW
-	//	RGB(255, 255, 255)					//	WHITE
-	//};
-
-	//for (int i = 0; i < 16; i++)
-	//{
-	//	pcsbi->ColorTable[i] = newColorTable[i];
-	//}
-
-	//SetConsoleScreenBufferInfoEx(hNewScreenBuffer, pcsbi);
-
-	//DWORD written;
-	//FillConsoleOutputCharacter(
-	//	hNewScreenBuffer,
-	//	TEXT(' '),
-	//	length, pcsbi->dwCursorPosition, &written);
-	////FillConsoleOutputAttribute(
-	////	hNewScreenBuffer,
-	////	BACKGROUND_GREEN,
-	////	length, csbi.dwCursorPosition, &written);
-	//FillConsoleOutputAttribute(
-	//	hNewScreenBuffer,
-	//	FOREGROUND_RED | FOREGROUND_INTENSITY,
-	//	length, pcsbi->dwCursorPosition, &written);
-
-	//HANDLE _stdin = GetStdHandle(STD_INPUT_HANDLE);
-
-	//SMALL_RECT srctReadRect = { 1, 1, 30, 4 };
-	//SMALL_RECT srctWriteRect = { 0, 0, 29, 3 };
-	//CHAR_INFO chiBuffer[WIDTH * HEIGHT]; // [4][30]; 
-	//COORD coordBufSize;
-	//COORD coordBufCoord;
-	//BOOL fSuccess;
-
-	//coordBufSize.Y = 4;
-	//coordBufSize.X = 30;
-
-	//coordBufCoord.X = coordBufCoord.Y = 0;
-
-	//if (!ReadConsoleOutput(
-	//	hNewScreenBuffer,
-	//	chiBuffer,
-	//	coordBufSize,
-	//	coordBufCoord,
-	//	&srctReadRect)) {
-	//	printf("Read console output failed - (%d)\n", GetLastError());
-	//	Sleep(10000);
-	//	return 1;
-	//}
-
-	//WriteChar(chiBuffer, 0, 0, TEXT("Mouse POS X: "), 13);
-	//WriteChar(chiBuffer, 0, 1, TEXT("Mouse POS Y: "), 13);
-	//if (!WriteConsoleOutput(hNewScreenBuffer, chiBuffer, coordBufSize, coordBufCoord, &srctWriteRect)) {
-	//	printf("Write console input failed - (%d)\n", GetLastError());
-	//	Sleep(10000);
-	//	return 1;
-	//}
-
-	////	Allow mouse input.
-	//DWORD flag;
-	//GetConsoleMode(_stdin, &flag);
-	//SetConsoleMode(_stdin, flag | ENABLE_MOUSE_INPUT);
-
-	//BOOL stop = FALSE;
-	//INPUT_RECORD ir[120];
-	//DWORD read;
-
-	//while (!stop)
-	//{
-	//	if (!ReadConsoleInput(_stdin, ir, 120, &read)) {
-	//		printf("Read console input failed - (%d)\n", GetLastError());
-	//		Sleep(10000);
-	//		return 1;
-	//	}
-	//	
-	//	for (DWORD i = 0; i < read; i++)
-	//	{
-	//		switch (ir[i].EventType)
-	//		{
-	//		case KEY_EVENT:
-	//			if (ir[i].Event.KeyEvent.wVirtualKeyCode == VK_ESCAPE) {
-	//				stop = TRUE;
-	//			}
-	//			break;
-	//		case MOUSE_EVENT:
-	//			COORD pos = ir[i].Event.MouseEvent.dwMousePosition;
-	//			TCHAR s[4];
-	//			_itow_s(pos.X, s, 10);
-	//			int count = _tcslen(s);
-	//			WriteChar(chiBuffer, 13, 0, s, count);
-	//			_itow_s(pos.Y, s, 10);
-	//			count = _tcslen(s);
-	//			WriteChar(chiBuffer, 13, 1, s, count);
-
-	//			if (!WriteConsoleOutput(hNewScreenBuffer, chiBuffer, coordBufSize, coordBufCoord, &srctWriteRect)) {
-	//				printf("Write console input failed - (%d)\n", GetLastError());
-	//				Sleep(10000);
-	//				return 1;
-	//			}
-	//		}
-	//	}
-	//}
-
-	//CloseHandle(hNewScreenBuffer);
-
-	//for (int i = 0; i < 16; i++)
-	//{
-	//	pcsbi->ColorTable[i] = colorTable[i];
-	//}
-
-	//delete[] colorTable;
-	//_stdin = GetStdHandle(STD_OUTPUT_HANDLE);
-	//if (!SetConsoleScreenBufferInfoEx(_stdin, pcsbi))
-	//{
-	//	printf("Restore console buffer info failed - (%d)\n", GetLastError());
-	//	return 1;
-	//}
-	//if (!FillConsoleOutputAttribute(_stdin, pcsbi->wAttributes, length, pcsbi->dwCursorPosition, &written)) {
-	//	printf("Restore console failed - (%d)\n", GetLastError());
-	//	return 1;
-	//}
-	//delete pcsbi;
-
-	//SetConsoleMode(_stdin, flag);
+	if (gOut != NULL)
+		CloseHandle(gOut);
 
 	return 0;
 }
 
+
+
+/////////////////////////////////////////////////////////////////////// 
+// ReadAndHandleOutput
+// Monitors handle for input. Exits when child exits or pipe breaks.
+/////////////////////////////////////////////////////////////////////// 
+void ReadAndHandleOutput(HANDLE hPipeRead)
+{
+	TCHAR lpBuffer[256];
+	DWORD nBytesRead;
+	DWORD nCharsWritten;
+
+	while (TRUE)
+	{
+		if (!ReadFile(hPipeRead, lpBuffer, sizeof(lpBuffer),
+			&nBytesRead, NULL) || !nBytesRead)
+		{
+			if (GetLastError() == ERROR_BROKEN_PIPE)
+				break; // pipe done - normal exit path.
+			else
+				ErrorExit(L"ReadFile"); // Something bad happened.
+		}
+
+		// Display the character read on the screen.
+		if (!WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), lpBuffer,
+			nBytesRead, &nCharsWritten, NULL))
+			ErrorExit(L"WriteConsole");
+	}
+}
+
+/////////////////////////////////////////////////////////////////////// 
+// GetAndSendInputThread
+// Thread procedure that monitors the console for input and sends input
+// to the child process through the input pipe.
+// This thread ends when the child application exits.
+/////////////////////////////////////////////////////////////////////// 
+DWORD WINAPI GetAndSendInputThread(LPVOID lpvThreadParam)
+{
+	CHAR read_buff[256];
+	DWORD nBytesRead, nBytesWrote;
+	HANDLE hPipeWrite = (HANDLE)lpvThreadParam;
+
+	// Get input from our console and send it to child through the pipe.
+	while (bRunThread)
+	{
+		if (!ReadConsole(hStdIn, read_buff, 1, &nBytesRead, NULL))
+			ErrorExit(L"ReadConsole");
+
+		read_buff[nBytesRead] = '\0'; // Follow input with a NULL.
+
+		if (!WriteFile(hPipeWrite, read_buff, nBytesRead, &nBytesWrote, NULL))
+		{
+			if (GetLastError() == ERROR_NO_DATA)
+				break; // Pipe was closed (normal exit path).
+			else
+				ErrorExit(L"WriteFile");
+		}
+	}
+
+	return 1;
+}
+
+/////////////////////////////////////////////////////////////////////// 
+// PrepAndLaunchRedirectedChild
+// Sets up STARTUPINFO structure, and launches redirected child.
+/////////////////////////////////////////////////////////////////////// 
+void PrepAndLaunchRedirectedChild(HANDLE hChildStdOut,
+	HANDLE hChildStdIn,
+	HANDLE hChildStdErr)
+{
+	PROCESS_INFORMATION pi;
+	STARTUPINFO si;
+
+	// Set up the start up info struct.
+	ZeroMemory(&si, sizeof(STARTUPINFO));
+	si.cb = sizeof(STARTUPINFO);
+	si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+	si.hStdOutput = hChildStdOut;
+	si.hStdInput = hChildStdIn;
+	si.hStdError = hChildStdErr;
+	// Use this if you want to hide the child:
+	si.wShowWindow = SW_HIDE;
+	// Note that dwFlags must include STARTF_USESHOWWINDOW if you want to
+	// use the wShowWindow flags.
+
+	// Launch the process that you want to redirect (in this case,
+	// Child.exe). Make sure Child.exe is in the same directory as
+	// redirect.c launch redirect from a command line to prevent location
+	// confusion.
+	TCHAR lpszPath[MAX_PATH] = L"ChildProcess.exe";
+	if (!CreateProcess(NULL, lpszPath, NULL, NULL, TRUE,
+		NORMAL_PRIORITY_CLASS | CREATE_NEW_CONSOLE | CREATE_UNICODE_ENVIRONMENT, NULL, NULL, &si, &pi))
+		ErrorExit(L"CreateProcess");
+
+	// Set global child process handle to cause threads to exit.
+	hChildProcess = pi.hProcess;
+
+	// Close any unnecessary handles.
+	if (!CloseHandle(pi.hThread)) ErrorExit(L"CloseHandle");
+}
