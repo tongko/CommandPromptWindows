@@ -87,6 +87,7 @@
     <ClInclude Include="Message.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Shell.h" />
     <ClInclude Include="ShellSettings.h" />
     <ClInclude Include="Stdafx.h" />
     <ClInclude Include="Workspace.h" />
@@ -98,6 +99,7 @@
     <ClCompile Include="ConInit.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Shell.cpp" />
     <ClCompile Include="ShellSettings.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

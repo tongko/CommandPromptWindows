@@ -1,7 +1,11 @@
 // ConsolePlayground.cpp : Defines the entry point for the console application.
 //
-
 #include "stdafx.h"
+#include <iomanip>
+#include <iterator>
+
+using namespace std;
+using namespace stdext;
 
 #define		WIDTH		30
 #define		HEIGHT		4
@@ -224,101 +228,157 @@ void PrepareConsole(void) {
 	delete csbi;
 }
 
+BOOL	ShallowCopy(const LPVOID psource, LPVOID pdest) {
+	LPBYTE ps = reinterpret_cast<LPBYTE>(psource);
+	LPBYTE pd = reinterpret_cast<LPBYTE>(pdest);
+	//LPBYTE pbCount = new BYTE[8];
+	ULONG sourceCount;
+
+	std::copy(ps, ps + 8, checked_array_iterator<LPBYTE>((LPBYTE)((LPVOID)&sourceCount), 8));	// Get psource byte count
+	//sourceCount = *((PULONG)pbCount);
+	ULONG destCount;
+	std::copy(pd, pd + 8, checked_array_iterator<LPBYTE>((LPBYTE)((LPVOID)&destCount), 8));		//	Get pdest byte count
+	//destCount = *((PULONG)pbCount);
+
+	//delete[] pbCount;
+
+	if (sourceCount != destCount) {
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return FALSE;
+	}
+
+	std::copy(ps, ps + sourceCount, checked_array_iterator<unsigned char *>(pd, destCount));
+	return TRUE;
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	PrepareConsole();
+	system("cls");
+	PCONSOLE_SCREEN_BUFFER_INFOEX pcsbi = new CONSOLE_SCREEN_BUFFER_INFOEX();
+	pcsbi->cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+	GetConsoleScreenBufferInfoEx(GetStdHandle(STD_OUTPUT_HANDLE), pcsbi);
 
-	HANDLE hOutputReadTmp, hOutputRead, hOutputWrite;
-	HANDLE hInputWriteTmp, hInputRead, hInputWrite;
-	HANDLE hErrorWrite;
-	HANDLE hThread;
-	DWORD ThreadId;
-	SECURITY_ATTRIBUTES sa;
+	CONSOLE_SCREEN_BUFFER_INFOEX csbi;
+	csbi.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+	ShallowCopy(pcsbi, &csbi);
 
-	// Set up the security attributes struct.
-	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
-	sa.lpSecurityDescriptor = NULL;
-	sa.bInheritHandle = TRUE;
+	wcout.fill(L' ');
+	wcout << left;
 
-	// Create the child output pipe.
-	if (!CreatePipe(&hOutputReadTmp, &hOutputWrite, &sa, 0))
-		ErrorExit(L"CreatePipe");
+	wcout.width(21);
+	wcout << L' ' << setw(50) << L"Source" << L"Destination" << endl;
+	wcout << setw(21) << L"cbSize:" << setw(50) << pcsbi->cbSize << csbi.cbSize << endl;
+	wcout << setw(21) << L"dwSize:" << setw(5) << L"X: " << setw(5) << pcsbi->dwSize.X << setw(5) << L", Y: " << setw(35) << pcsbi->dwSize.Y
+		<< setw(5) << L"X: " << setw(5) << csbi.dwSize.X << setw(5) << L", Y: " << csbi.dwSize.Y << endl;
+	wcout << setw(21) << L"dwCursorPos:" << setw(5) << L"X: " << setw(5) << pcsbi->dwCursorPosition.X << setw(5) << L", Y: " << setw(35) << pcsbi->dwCursorPosition.Y
+		<< setw(5) << setw(5) << L"X: " << setw(5) << csbi.dwCursorPosition.X << setw(5) << L", Y: " << csbi.dwCursorPosition.Y << endl;
+	wcout << setw(21) << L"wAttributes:" << setw(50) << pcsbi->wAttributes << csbi.wAttributes << endl;
+	wcout << setw(21) << L"srWindow:" << setw(5) << L"L:" << setw(5) << pcsbi->srWindow.Left << setw(5) << L", T:" << setw(5) << pcsbi->srWindow.Top
+		<< setw(5) << L", R:" << setw(5) << pcsbi->srWindow.Right << setw(5) << L", B:" << setw(15) << pcsbi->srWindow.Bottom;
+	wcout << setw(5) << L"L:" << setw(5) << csbi.srWindow.Left << setw(5) << L", T:" << setw(5) << csbi.srWindow.Top
+		<< setw(5) << L", R:" << setw(5) << csbi.srWindow.Right << setw(5) << L", B:" << setw(15) << csbi.srWindow.Bottom << endl;
 
-	// Create a duplicate of the output write handle for the std error
-	// write handle. This is necessary in case the child application
-	// closes one of its std output handles.
-	if (!DuplicateHandle(GetCurrentProcess(), hOutputWrite,
-		GetCurrentProcess(), &hErrorWrite, 0,
-		TRUE, DUPLICATE_SAME_ACCESS))
-		ErrorExit(L"DuplicateHandle");
+	wcout << setw(21) << L"dwMaximumWindowSize:" << setw(5) << L"X: " << setw(5) << pcsbi->dwMaximumWindowSize.X << setw(5) << L", Y: " 
+		<< setw(35) << pcsbi->dwMaximumWindowSize.Y << setw(5) << L"X: " << setw(5) << csbi.dwMaximumWindowSize.X << setw(5) << L", Y: "
+		<< csbi.dwMaximumWindowSize.Y << endl;
 
-	// Create the child input pipe.
-	if (!CreatePipe(&hInputRead, &hInputWriteTmp, &sa, 0))
-		ErrorExit(L"CreatePipe");
+	wcout << setw(21) << L"wPopupAttributes:" << setw(50) << pcsbi->wPopupAttributes << csbi.wPopupAttributes << endl;
+	wcout << setw(21) << L"bFullscreen:" << setw(50) << pcsbi->bFullscreenSupported << csbi.bFullscreenSupported << endl;
 
-	// Create new output read handle and the input write handles. Set
-	// the Properties to FALSE. Otherwise, the child inherits the
-	// properties and, as a result, non-closeable handles to the pipes
-	// are created.
-	if (!DuplicateHandle(GetCurrentProcess(), hOutputReadTmp,
-		GetCurrentProcess(),
-		&hOutputRead, // Address of new handle.
-		0, FALSE, // Make it uninheritable.
-		DUPLICATE_SAME_ACCESS))
-		ErrorExit(L"DupliateHandle");
+	system("PAUSE");
+	//PrepareConsole();
 
-	if (!DuplicateHandle(GetCurrentProcess(), hInputWriteTmp,
-		GetCurrentProcess(),
-		&hInputWrite, // Address of new handle.
-		0, FALSE, // Make it uninheritable.
-		DUPLICATE_SAME_ACCESS))
-		ErrorExit(L"DupliateHandle");
+	//HANDLE hOutputReadTmp, hOutputRead, hOutputWrite;
+	//HANDLE hInputWriteTmp, hInputRead, hInputWrite;
+	//HANDLE hErrorWrite;
+	//HANDLE hThread;
+	//DWORD ThreadId;
+	//SECURITY_ATTRIBUTES sa;
 
-	// Close inheritable copies of the handles you do not want to be
-	// inherited.
-	if (!CloseHandle(hOutputReadTmp)) ErrorExit(L"CloseHandle");
-	if (!CloseHandle(hInputWriteTmp)) ErrorExit(L"CloseHandle");
+	//// Set up the security attributes struct.
+	//sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+	//sa.lpSecurityDescriptor = NULL;
+	//sa.bInheritHandle = TRUE;
 
-	// Get std input handle so you can close it and force the ReadFile to
-	// fail when you want the input thread to exit.
-	if ((hStdIn = GetStdHandle(STD_INPUT_HANDLE)) ==
-		INVALID_HANDLE_VALUE)
-		ErrorExit(L"GetStdHandle");
+	//// Create the child output pipe.
+	//if (!CreatePipe(&hOutputReadTmp, &hOutputWrite, &sa, 0))
+	//	ErrorExit(L"CreatePipe");
 
-	PrepAndLaunchRedirectedChild(hOutputWrite, hInputRead, hErrorWrite);
+	//// Create a duplicate of the output write handle for the std error
+	//// write handle. This is necessary in case the child application
+	//// closes one of its std output handles.
+	//if (!DuplicateHandle(GetCurrentProcess(), hOutputWrite,
+	//	GetCurrentProcess(), &hErrorWrite, 0,
+	//	TRUE, DUPLICATE_SAME_ACCESS))
+	//	ErrorExit(L"DuplicateHandle");
 
-	// Close pipe handles (do not continue to modify the parent).
-	// You need to make sure that no handles to the write end of the
-	// output pipe are maintained in this process or else the pipe will
-	// not close when the child process exits and the ReadFile will hang.
-	if (!CloseHandle(hOutputWrite)) ErrorExit(L"CloseHandle");
-	if (!CloseHandle(hInputRead)) ErrorExit(L"CloseHandle");
-	if (!CloseHandle(hErrorWrite)) ErrorExit(L"CloseHandle");
+	//// Create the child input pipe.
+	//if (!CreatePipe(&hInputRead, &hInputWriteTmp, &sa, 0))
+	//	ErrorExit(L"CreatePipe");
 
-	// Launch the thread that gets the input and sends it to the child.
-	hThread = CreateThread(NULL, 0, GetAndSendInputThread,
-		(LPVOID)hInputWrite, 0, &ThreadId);
-	if (hThread == NULL) ErrorExit(L"CreateThread");
+	//// Create new output read handle and the input write handles. Set
+	//// the Properties to FALSE. Otherwise, the child inherits the
+	//// properties and, as a result, non-closeable handles to the pipes
+	//// are created.
+	//if (!DuplicateHandle(GetCurrentProcess(), hOutputReadTmp,
+	//	GetCurrentProcess(),
+	//	&hOutputRead, // Address of new handle.
+	//	0, FALSE, // Make it uninheritable.
+	//	DUPLICATE_SAME_ACCESS))
+	//	ErrorExit(L"DupliateHandle");
 
-	// Read the child's output.
-	ReadAndHandleOutput(hOutputRead);
-	// Redirection is complete
+	//if (!DuplicateHandle(GetCurrentProcess(), hInputWriteTmp,
+	//	GetCurrentProcess(),
+	//	&hInputWrite, // Address of new handle.
+	//	0, FALSE, // Make it uninheritable.
+	//	DUPLICATE_SAME_ACCESS))
+	//	ErrorExit(L"DupliateHandle");
 
-	// Force the read on the input to return by closing the stdin handle.
-	if (!CloseHandle(hStdIn)) ErrorExit(L"CloseHandle");
+	//// Close inheritable copies of the handles you do not want to be
+	//// inherited.
+	//if (!CloseHandle(hOutputReadTmp)) ErrorExit(L"CloseHandle");
+	//if (!CloseHandle(hInputWriteTmp)) ErrorExit(L"CloseHandle");
 
-	// Tell the thread to exit and wait for thread to die.
-	bRunThread = FALSE;
+	//// Get std input handle so you can close it and force the ReadFile to
+	//// fail when you want the input thread to exit.
+	//if ((hStdIn = GetStdHandle(STD_INPUT_HANDLE)) ==
+	//	INVALID_HANDLE_VALUE)
+	//	ErrorExit(L"GetStdHandle");
 
-	if (WaitForSingleObject(hThread, INFINITE) == WAIT_FAILED)
-		ErrorExit(L"WaitForSingleObject");
+	//PrepAndLaunchRedirectedChild(hOutputWrite, hInputRead, hErrorWrite);
 
-	if (!CloseHandle(hOutputRead)) ErrorExit(L"CloseHandle");
-	if (!CloseHandle(hInputWrite)) ErrorExit(L"CloseHandle");
-	ReadKey(GetStdHandle(STD_INPUT_HANDLE));
+	//// Close pipe handles (do not continue to modify the parent).
+	//// You need to make sure that no handles to the write end of the
+	//// output pipe are maintained in this process or else the pipe will
+	//// not close when the child process exits and the ReadFile will hang.
+	//if (!CloseHandle(hOutputWrite)) ErrorExit(L"CloseHandle");
+	//if (!CloseHandle(hInputRead)) ErrorExit(L"CloseHandle");
+	//if (!CloseHandle(hErrorWrite)) ErrorExit(L"CloseHandle");
 
-	if (gOut != NULL)
-		CloseHandle(gOut);
+	//// Launch the thread that gets the input and sends it to the child.
+	//hThread = CreateThread(NULL, 0, GetAndSendInputThread,
+	//	(LPVOID)hInputWrite, 0, &ThreadId);
+	//if (hThread == NULL) ErrorExit(L"CreateThread");
+
+	//// Read the child's output.
+	//ReadAndHandleOutput(hOutputRead);
+	//// Redirection is complete
+
+	//// Force the read on the input to return by closing the stdin handle.
+	//if (!CloseHandle(hStdIn)) ErrorExit(L"CloseHandle");
+
+	//// Tell the thread to exit and wait for thread to die.
+	//bRunThread = FALSE;
+
+	//if (WaitForSingleObject(hThread, INFINITE) == WAIT_FAILED)
+	//	ErrorExit(L"WaitForSingleObject");
+
+	//if (!CloseHandle(hOutputRead)) ErrorExit(L"CloseHandle");
+	//if (!CloseHandle(hInputWrite)) ErrorExit(L"CloseHandle");
+	//ReadKey(GetStdHandle(STD_INPUT_HANDLE));
+
+	//if (gOut != NULL)
+	//	CloseHandle(gOut);
 
 	return 0;
 }
