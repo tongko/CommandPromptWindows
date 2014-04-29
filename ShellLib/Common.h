@@ -9,19 +9,12 @@ namespace ShellLib {
 
 #define	EXIT_FAILURE	1
 
-#ifndef MAX_STR
-#define	MAX_STR			1024
-#endif // !MAX_STR
-
-
 	__forceinline void _twrite(LPCTSTR lpszFormat, ...) {
-		LPTSTR	lpTemp;
-		TCHAR	outTemp[STRSAFE_MAX_CCH];
-		DWORD	dwCharWritten;
+		TCHAR	outTemp[MAX_STR_LENGTH];
 		va_list	argPtr;
 		
 		va_start(argPtr, lpszFormat);
-		HRESULT hr = StringCchPrintf(outTemp, STRSAFE_MAX_CCH, lpszFormat, argPtr);
+		HRESULT hr = StringCchPrintf(outTemp, MAX_STR_LENGTH, lpszFormat, argPtr);
 		va_end(argPtr);
 		
 		if (FAILED(hr)) {
@@ -94,24 +87,21 @@ namespace ShellLib {
 	HANDLE	GetFocusWorkplace(HANDLE hWkp);
 
 
-	BOOL	ShallowCopy(const LPVOID psource, LPVOID pdest) {
+	__forceinline BOOL	ShallowCopy(const LPVOID psource, LPVOID pdest) {
 		LPBYTE ps = reinterpret_cast<LPBYTE>(psource);
 		LPBYTE pd = reinterpret_cast<LPBYTE>(pdest);
-		LPBYTE pbCount = new BYTE[8];
 
-		std::copy(ps, ps + 8, checked_array_iterator<LPBYTE>(pbCount, 8));	// Get psource byte count
-		ULONG sourceCount = *((PULONG)pbCount);
-		std::copy(pd, pd + 8, checked_array_iterator<LPBYTE>(pbCount, 8));	//	Get pdest byte count
-		ULONG destCount = *((PULONG)pbCount);
-
-		delete[] pbCount;
+		// Get psource byte count
+		ULONG sourceCount = *reinterpret_cast<PULONG>(ps);
+		//	Get pdest byte count
+		ULONG destCount = *reinterpret_cast<PULONG>(pd);
 
 		if (sourceCount != destCount) {
 			SetLastError(ERROR_INVALID_PARAMETER);
 			return FALSE;
 		}
 
-		std::copy(ps, ps + sourceCount, pd);
+		std::copy(ps, ps + sourceCount, checked_array_iterator<LPBYTE>(pd, destCount));
 	}
 
 }

@@ -25,12 +25,15 @@
     <Filter Include="Source Files\Workspaces">
       <UniqueIdentifier>{6c501105-e348-435c-b477-2580a51be990}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{500b9001-f539-48c3-8344-5ba4a12719d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{bd9434fd-da05-40db-9b10-bb6c86ebeddd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ConInit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
@@ -39,17 +42,11 @@
     <ClInclude Include="Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Exceptions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Workspace.h">
       <Filter>Header Files\Workspaces</Filter>
     </ClInclude>
     <ClInclude Include="WorkspaceManager.h">
       <Filter>Header Files\Workspaces</Filter>
-    </ClInclude>
-    <ClInclude Include="LockGuard.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Message.h">
       <Filter>Header Files\Workspaces</Filter>
@@ -60,21 +57,27 @@
     <ClInclude Include="resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="ShellSettings.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ConInit.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Exceptions.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="LockGuard.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Shell.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ShellSettings.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AssemblyInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ConInit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
@@ -89,12 +92,16 @@
     <ClCompile Include="Message.cpp">
       <Filter>Source Files\Workspaces</Filter>
     </ClCompile>
-    <ClCompile Include="ShellSettings.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ConInit.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Shell.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="ShellSettings.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="AssemblyInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

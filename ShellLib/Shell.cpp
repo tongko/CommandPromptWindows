@@ -5,6 +5,7 @@
 
 namespace shllib {
 
+	using namespace ShellLib;
 	using namespace ShellLib::Threading;
 
 	CShell::CShell()
@@ -51,18 +52,39 @@ namespace shllib {
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), m_pcsbi->wAttributes);
 	}
 
-	void	CShell::GetInfo(PCONSOLE_SCREEN_BUFFER_INFOEX pcsbi) {
+	BOOL	CShell::SetBufferSize(COORD newSize) {
+		CLockGuard lock(m_hMutex);
+
+		GetInfo();
+		m_pcsbi->dwSize.X = newSize.X;
+		m_pcsbi->dwSize.Y = newSize.Y;
+
+		if (!SetConsoleScreenBufferInfoEx(GetStdHandle(STD_OUTPUT_HANDLE), m_pcsbi)) {
+			_tcerr << endl << _T("ERROR: Failed to set console screen buffer size.")
+				<< __FILET__ << _T(" at function ") << __FUNCTIONT__ << _T(": line ")
+				<< __LINE__ << endl;
+
+		}
+	}
+
+	BOOL	CShell::SetWindowLayout(SMALL_RECT srNew) {
+
+	}
+
+	BOOL	CShell::GetInfo(PCONSOLE_SCREEN_BUFFER_INFOEX pcsbi) {
+		CLockGuard lock(m_hMutex);
+
 		if (pcsbi == NULL) return;
 
-		//	No pointer type in CONSOLE_SCREEN_BUFFER_INFOEX, thus
-		//	no worries about shallow copy of object.
-		LPBYTE lpTemp = (LPBYTE)((LPVOID)pcsbi);
-		LPBYTE lpCsbi = (LPBYTE)((LPVOID)m_pcsbi);
-		
-		for (ULONG i = 0; i < pcsbi->cbSize; i++)
-		{
-			lpTemp[i++] = lpCsbi[i++];
+		GetInfo();
+		if (!ShallowCopy(m_pcsbi, pcsbi)) {
+			_tcerr << endl << _T("ERROR: Buffer pointed to by pcsbi has an invalid size.") << endl
+				<< __FILET__ << _T("at functoin ") << __FUNCTIONT__ << _T(": line ")
+				<< __LINE__ << endl;
+			return FALSE;
 		}
+
+		return TRUE;
 	}
 
 	void	CShell::GetInfo(void) {

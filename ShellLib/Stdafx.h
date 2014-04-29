@@ -45,6 +45,7 @@ typedef		std::wfstream		_tfstream;
 //
 //	Application Includes
 //
+#include	"Constants.h"
 #include	"LockGuard.h"
 #include	"Exceptions.h"
 #include	"Common.h"
