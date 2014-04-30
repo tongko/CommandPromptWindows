@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{bd9434fd-da05-40db-9b10-bb6c86ebeddd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\Exceptions">
+      <UniqueIdentifier>{0f7f863d-af10-487c-8677-ca15b46556bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
@@ -74,6 +77,12 @@
     </ClInclude>
     <ClInclude Include="Constants.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ArgumentException.h">
+      <Filter>Header Files\Core\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Header Files\Core\Exceptions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

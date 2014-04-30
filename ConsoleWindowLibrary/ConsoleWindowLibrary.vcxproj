@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C262837E-F68F-4140-BA96-C771B4B91CE4}</ProjectGuid>
+    <ProjectGuid>{E434B4D0-6B92-4132-A1F9-59B84CD284EA}</ProjectGuid>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>ShellLib</RootNamespace>
+    <RootNamespace>ConsoleWindowLibrary</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -87,7 +87,6 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -100,7 +99,6 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -133,45 +131,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentException.h" />
-    <ClInclude Include="Constants.h" />
     <ClInclude Include="Exception.h" />
-    <ClInclude Include="Exceptions.h" />
-    <ClInclude Include="Common.h" />
-    <ClInclude Include="ConInit.h" />
-    <ClInclude Include="LockGuard.h" />
-    <ClInclude Include="Message.h" />
-    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Shell.h" />
-    <ClInclude Include="ShellSettings.h" />
     <ClInclude Include="Stdafx.h" />
-    <ClInclude Include="Workspace.h" />
-    <ClInclude Include="WorkspaceManager.h" />
-    <ClInclude Include="Workspaces.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ArgumentException.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="ConInit.cpp" />
-    <ClCompile Include="Message.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Shell.cpp" />
-    <ClCompile Include="ShellSettings.cpp" />
+    <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Workspace.cpp" />
-    <ClCompile Include="WorkspaceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

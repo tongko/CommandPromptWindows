@@ -67,8 +67,13 @@ namespace shllib {
 		}
 	}
 
-	BOOL	CShell::SetWindowLayout(SMALL_RECT srNew) {
+	BOOL	CShell::SetWindowLayout(CRectangle srNew) {
+		CLockGuard lock(m_hMutex);
 
+		GetInfo();
+		if (m_pcsbi->dwSize.X < srNew.Width
+			|| m_pcsbi->dwSize.Y < srNew.Height)
+			throw exception();
 	}
 
 	BOOL	CShell::GetInfo(PCONSOLE_SCREEN_BUFFER_INFOEX pcsbi) {

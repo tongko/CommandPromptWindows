@@ -7,24 +7,16 @@ namespace ShellLib { namespace Workspaces {
 	using namespace System;
 	using namespace System::Drawing;
 
-	ref class CWorkspaceManager
+	static ref class CWorkspaceManager
 	{
 	public:
 		CWorkspaceManager();
 		~CWorkspaceManager();
 
 	public:
-		void		Initialize(CShellLibConfigSection ^ configSecion);
-		//void		StartWorkspace();
+		void	Initialize(void);
 
 	public:
-		property short					Width;
-		property short					Height;
-		property String ^				Name;
-		property CursorSizeEnum			CursorSize;
-		property Point					WindowPosition;
-		property CShellLibSettings ^	Settings;
-
 	};
 
 }}

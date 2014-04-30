@@ -9,7 +9,6 @@
 #include	<Windows.h>
 #include	<stdio.h>
 #include	<tchar.h>
-#include	<stdio.h>
 #include	<iostream>
 #include	<strsafe.h>
 

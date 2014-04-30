@@ -3,6 +3,7 @@
 namespace shllib {
 
 	using namespace std;
+	using namespace ShellLib::Drawing;
 
 	static class CShell
 	{
@@ -15,7 +16,7 @@ namespace shllib {
 		void	SetColor(WORD wColor, WORD wMASK);
 		BOOL	GetInfo(PCONSOLE_SCREEN_BUFFER_INFOEX pcsbi);
 		BOOL	SetBufferSize(COORD newSize);
-		BOOL	SetWindowLayout(SMALL_RECT srNew);
+		BOOL	SetWindowLayout(CRectangle srNew);
 
 	private:
 		void	GetInfo(void);

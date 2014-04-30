@@ -1,6 +1,7 @@
-#include "stdafx.h"
-#include "Workspaces.h"
-#include "WorkspaceManager.h"
+#include	"stdafx.h"
+#include	"Shell.h"
+#include	"Workspaces.h"
+#include	"WorkspaceManager.h"
 
 
 namespace ShellLib { namespace Workspaces {
@@ -19,17 +20,7 @@ namespace ShellLib { namespace Workspaces {
 
 #pragma region Methods
 
-	void	CWorkspaceManager::Initialize(CShellLibConfigSection ^ configSection) {
-		if (configSection == nullptr)
-			throw gcnew ArgumentNullException("configSection");
-
-		Settings = CShellLibSettings::Configure(configSection);
-
-		CursorSize = Settings->CursorSize;
-		Height = Settings->Layout.WindowSize.Height;
-		Name = Settings->Caption;
-		Width = Settings->Layout.WindowSize.Width;
-		WindowPosition = Settings->Layout.GetWindowLocation();
+	void	CWorkspaceManager::Initialize(void) {
 	}
 
 #pragma endregion
