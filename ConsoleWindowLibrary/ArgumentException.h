@@ -13,6 +13,9 @@ namespace conlib {
 	public:
 		virtual const LPTSTR	ArgumentName(void) const _NOEXCEPT_;
 
+	protected:
+		void					SetArgumentName(LPCTSTR);
+
 	private:
 		LPTSTR		m_lpszArgument;
 	};

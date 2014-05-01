@@ -1,6 +1,7 @@
 #include	"Stdafx.h"
 #include	"Exception.h"
 #include	<DbgHelp.h>
+#include	<malloc.h>
 
 namespace conlib {
 
@@ -66,19 +67,21 @@ namespace conlib {
 		UINT			i;
 		LPVOID			stack[1024];
 		USHORT			frames;
-		PSYMBOL_INFO 	symbol;
+		PSYMBOL_INFOW 	symbol;
 		HANDLE			process = GetCurrentProcess();
 
 		SymInitialize(process, NULL, TRUE);
 
 		frames = CaptureStackBackTrace(0, 1024, stack, NULL);
-		symbol = new SYMBOL_INFO();    (PSYMBOL_INFO)calloc(sizeof(SYMBOL_INFO)+256 * sizeof(char), 1);
-		symbol->MaxNameLen = 255;
-		symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+		symbol = (PSYMBOL_INFOW) malloc(sizeof(SYMBOL_INFOW) + MAX_PATH * sizeof(TCHAR));
+		ZeroMemory(symbol, sizeof(SYMBOL_INFOW) + MAX_PATH * sizeof(TCHAR));
+
+		symbol->MaxNameLen = MAX_PATH;
+		symbol->SizeOfStruct = sizeof(SYMBOL_INFOW);
 
 		for (i = 0; i < frames; i++)
 		{
-			SymFromAddr(process, (DWORD64)(stack[i]), 0, symbol);
+			SymFromAddrW(process, (DWORD64)(stack[i]), 0, symbol);
 
 			printf("%i: %s - 0x%0X\n", frames - i - 1, symbol->Name, symbol->Address);
 		}
