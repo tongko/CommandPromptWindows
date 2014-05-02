@@ -21,8 +21,6 @@ namespace conlib {
 	{
 		if (m_lpszArgument != NULL)
 			delete[] m_lpszArgument;
-
-		CException::~CException();
 	}
 
 }

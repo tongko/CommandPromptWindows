@@ -139,12 +139,15 @@
     <ClInclude Include="Exception.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="StackTrace.h" />
+    <ClInclude Include="DataTypes.h" />
     <ClInclude Include="Stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArgumentException.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="Exception.cpp" />
+    <ClCompile Include="StackTrace.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -64,6 +64,9 @@ namespace conlib {
 	}
 
 	void CException::FillStackTrace(void) {
+		//	This must be loaded upon apps start
+		//	SymSetOptions(SYMOPT_LOAD_LINES);
+
 		UINT			i;
 		LPVOID			stack[1024];
 		USHORT			frames;

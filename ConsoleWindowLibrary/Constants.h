@@ -11,6 +11,9 @@ namespace conlib {
 	//	String
 	static const int MAX_STR_LENGTH(0xFFFF);
 
+	//	Stack Trace
+	static const int STACKWALK_MAX_NAMELEN(1024);
+
 	//	Color Code
 	static const WORD FILL_MASK(0x00);
 	static const WORD BACKGROUND_MASK(0xF0);
